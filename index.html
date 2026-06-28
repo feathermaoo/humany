@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>胡曼黎全能手冊 — 完美修復版</title>
+    <title>胡曼黎全能手冊 — 進化版</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #1a1515 0%, #2c1e1e 100%);
@@ -77,7 +77,7 @@
             align-items: center;
         }
 
-        /* 命運羅盤 */
+        /* 修正 3：業務員天命盤備註風格 */
         .destiny-box {
             background: linear-gradient(180deg, #fffdf9 0%, #fbf9f3 100%);
             border: 1px solid rgba(212, 175, 55, 0.4);
@@ -85,34 +85,14 @@
             padding: 14px;
         }
         
-        .result-box {
+        .premium-memo {
             margin-top: 12px;
             padding: 14px;
-            background: white;
+            background: #fffefb;
+            border: 1px dashed var(--gold);
             border-radius: 10px;
-            border-left: 4px solid var(--gold);
             display: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        /* 金句與防護罩 */
-        .gold-quote {
-            font-size: 13.5px;
-            line-height: 1.6;
-            color: var(--text-main);
-            border-left: 3px solid var(--wine-red);
-            padding-left: 12px;
-            margin: 8px 0;
-            font-style: italic;
-        }
-
-        .badge {
-            background: #f4ebe8;
-            color: var(--wine-red);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.05);
         }
 
         /* CRM 客戶卡片 */
@@ -122,7 +102,6 @@
             padding: 14px;
             margin-bottom: 12px;
             background: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
         .client-header {
@@ -135,6 +114,8 @@
         .client-name {
             font-weight: 600;
             font-size: 15px;
+            display: flex;
+            align-items: center;
         }
 
         .temp-dot {
@@ -162,7 +143,57 @@
             padding: 8px;
             border-radius: 8px;
             border: 1px dashed #ebdcd8;
-            line-white: 1.5;
+        }
+
+        /* 修正 2：行事曆模式樣式 */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .calendar-header-day {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-sub);
+            padding: 4px 0;
+        }
+        .calendar-day {
+            background: white;
+            border: 1px solid #f0e6e2;
+            border-radius: 8px;
+            padding: 8px 0;
+            font-size: 12px;
+            cursor: pointer;
+            position: relative;
+            min-height: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .calendar-day.active {
+            border: 1px solid var(--wine-red);
+            background: #fff5f5;
+        }
+        .calendar-day.has-event::after {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--wine-red);
+            border-radius: 50%;
+            display: block;
+            margin-top: 2px;
+        }
+        .day-detail-box {
+            margin-top: 10px;
+            background: #fdfbf9;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            border: 1px solid var(--border);
+            display: none;
         }
 
         /* 表單與按鈕 */
@@ -174,13 +205,6 @@
             border-radius: 10px;
             box-sizing: border-box;
             font-size: 13px;
-            background: #fff;
-            color: var(--text-main);
-        }
-        
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--gold);
         }
 
         .btn {
@@ -192,66 +216,45 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .btn:hover { 
-            background: #552228;
-            transform: translateY(-1px);
         }
 
         .btn-gold {
             background: linear-gradient(135deg, #d4af37 0%, #aa8416 100%);
             color: white;
-            box-shadow: 0 4px 10px rgba(170, 132, 22, 0.2);
-        }
-        
-        .btn-gold:hover {
-            box-shadow: 0 6px 14px rgba(170, 132, 22, 0.3);
         }
 
-        /* 破冰話題 */
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .tag-btn { background: #f7f7f7; border: 1px solid #e5e5e5; border-radius: 8px; padding: 6px 12px; font-size: 11px; cursor: pointer; }
+        .tag-btn.active { background: var(--wine-red); color: white; }
+        .output-box { background: #f8f8fa; border: 1px solid #eaeaea; border-radius: 12px; padding: 14px; font-size: 13px; position: relative; }
 
-        .tag-btn {
-            background: #f7f7f7;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 11px;
-            color: var(--text-sub);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tag-btn.active {
-            background: var(--wine-red);
-            color: white;
-            border-color: var(--wine-red);
-        }
-
-        .output-box {
-            background: #f8f8fa;
-            border: 1px solid #eaeaea;
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 13px;
-            position: relative;
-        }
-
-        /* 日程規劃 */
-        .schedule-list { font-size: 13px; }
-        .schedule-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px dashed var(--border);
+        /* 彈出視窗 (家系圖) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
             align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .genogram-node {
+            display: inline-block;
+            padding: 8px 12px;
+            border: 2px solid var(--text-main);
+            border-radius: 8px;
+            margin: 5px;
+            font-size: 13px;
+            background: #fffdf9;
         }
     </style>
 </head>
@@ -260,33 +263,29 @@
 <div class="container">
     <header>
         <h1>胡曼黎 全能手冊</h1>
-        <div class="subtitle">金牌實戰 · 命運掌控</div>
+        <div class="subtitle">金牌實戰 · 智效掌控</div>
     </header>
 
+    <!-- 修正 3：業務員專屬天命盤 -->
     <div class="section">
-        <div class="section-title">🔮 曼黎的命運羅盤 (生命靈數推薦)</div>
+        <div class="section-title">🔮 業務員專屬天命盤 (大腦走向備註)</div>
         <div class="destiny-box">
-            <input type="text" id="user-name" placeholder="請輸入妳的名字或暱稱">
+            <input type="text" id="user-name" placeholder="輸入妳的名字">
             <input type="date" id="user-birthday">
-            <button class="btn btn-gold" style="width: 100%;" onclick="calculateDestiny()">啟動天命盤計算</button>
+            <button class="btn btn-gold" style="width: 100%;" onclick="calculateDestiny()">算出我的生命靈數特質</button>
             
-            <div class="result-box" id="destiny-result">
-                <div style="font-weight: 600; font-size: 15px; color: var(--wine-red); margin-bottom: 6px;">
-                    ✨ <span id="res-name">羽毛</span> 的生命靈數核心是：<span id="res-num" style="font-size: 20px; color:var(--gold-dark);">5</span> 號人
+            <div class="premium-memo" id="destiny-result">
+                <div style="font-weight: bold; color: var(--wine-red); border-bottom: 1px solid var(--gold); padding-bottom: 6px; margin-bottom: 8px;">
+                    📝 業務大腦備忘錄 — <span id="res-name">羽毛</span> (<span id="res-num">5</span> 號人)
                 </div>
-                <div id="res-analysis" style="font-size: 13px; line-height: 1.6; color: var(--text-main);">
-                    導航生成中...
+                <div id="res-analysis" style="font-size: 13px; line-height: 1.6; color: var(--text-main); white-space: pre-wrap;">
+                    分析生成中...
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-title">🛡️ 拜訪前的心理防護罩 <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="refreshEnergy()">補魔</button></div>
-        <div style="margin-bottom: 8px;">🧭 幸運方位：<span class="badge" id="compass-text">正東方（貴人相助）</span></div>
-        <div class="gold-quote" id="quote-text">「女性最大的保險，是經營好自己。今天不開單，明天吃路邊攤。打起精神出門！」</div>
-    </div>
-
+    <!-- 破冰話題產生器 -->
     <div class="section">
         <div class="section-title">🚀 破冰話題產生器</div>
         <div class="tag-container">
@@ -302,66 +301,77 @@
         </div>
     </div>
 
+    <!-- 4. 老上海人情簿 & 修正 1 家系圖按鈕 -->
     <div class="section">
         <div class="section-title">👥 老上海人情簿 (互動 CRM)</div>
         <div style="background: #fdfbf9; padding: 14px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #ebdcd8;">
-            <b style="font-size:12.5px; color: var(--wine-red); display:block; margin-bottom:8px;">新增重要客戶資料：</b>
+            <b style="font-size:12.5px; color: var(--wine-red); display:block; margin-bottom:8px;">新增重要客戶：</b>
             <input type="text" id="c-name" placeholder="客戶姓名">
-            <input type="text" id="c-family" placeholder="家族關係譜 (例: 夫:張明 / 子:張小寶)">
+            <input type="text" id="c-family" placeholder="家系關係 (格式範例: 夫:張明, 子:張小寶)">
             <select id="c-days">
                 <option value="3">7天內聯絡過 (滾燙紅)</option>
                 <option value="15">14天內聯絡過 (溫暖黃)</option>
                 <option value="40">超過30天沒聯絡 (冰藍冷)</option>
             </select>
-            <textarea id="c-memo" placeholder="曼黎碎碎念備忘：客戶地雷、重要日子與細項事項" rows="3"></textarea>
+            <textarea id="c-memo" placeholder="客戶地雷、重要日子與細項備忘" rows="2"></textarea>
             <button class="btn" style="width:100%" onclick="addClient()">存入人情簿</button>
         </div>
         <div id="client-list"></div>
     </div>
 
+    <!-- 修正 2：訪量行程行事曆模式 -->
     <div class="section">
-        <div class="section-title">📅 下兩週訪量行程確認</div>
+        <div class="section-title">📅 兩週訪量行事曆</div>
         <div style="background: #fdfbf9; padding: 14px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #ebdcd8;">
             <input type="date" id="s-date">
-            <input type="text" id="s-event" placeholder="拜訪客戶與行程目的">
-            <button class="btn" style="width:100%" onclick="addSchedule()">排定行程</button>
+            <input type="text" id="s-event" placeholder="拜訪目的 / 客戶名稱">
+            <button class="btn" style="width:100%" onclick="addSchedule()">排定排程</button>
         </div>
-        <div class="schedule-list" id="schedule-list"></div>
+        
+        <!-- 月格行事曆呈現 -->
+        <div style="font-size:13px; font-weight:bold; color:var(--wine-red); text-align:center; margin-bottom:5px;" id="calendar-month-title">2026年 7月</div>
+        <div class="calendar-grid" id="calendar-body">
+            <!-- 由 JS 自動渲染格位 -->
+        </div>
+        <div class="day-detail-box" id="day-detail">點擊上方有圓點的日期查看行程。</div>
+    </div>
+</div>
+
+<!-- 修正 1：家系圖彈出演窗 -->
+<div class="modal" id="genogram-modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0; color:var(--wine-red);" id="geno-title">客戶家系圖</h3>
+        <div style="border: 1px solid #eee; padding: 15px; border-radius: 12px; margin: 15px 0; background: #fafafa;" id="geno-visual">
+            <!-- 家系節點自動生成 -->
+        </div>
+        <button class="btn" style="width:100%; background:#8c7b79;" onclick="closeGenoModal()">關閉圖表</button>
     </div>
 </div>
 
 <script>
     const destinyDatabase = {
-        1: "<b>開拓型戰士：</b>妳天生自帶領導力與強烈直覺。最適合妳的走向是獨立開拓陌生市場，或是挑戰高難度的資產配置大單。不要等著別人給資源，主動出擊，像胡曼黎一樣靠自己殺出一條血路！",
-        2: "<b>合作型軍師：</b>妳擁有極強的同理心與人際協調力。在保險業中，妳最適合走「深度人情與轉介紹」路線，阿姨和長輩會瘋狂被妳的貼心融化。善用敏銳度，多做家庭保單檢視，靠口碑建立無敵團隊！",
-        3: "<b>創意型演說家：</b>妳思維靈動、極具感染力。社群行銷（IG/Threads）或大型說明會是妳的黃金舞台。把死板的條款變成生動的故事，用幽默和魅力破冰，客戶會因為喜歡「妳這個人」而主動跟妳簽單。",
-        4: "<b>守護型架構師：</b>妳心思細密、極具條理。完美的家族譜分析、精準的法規條款與稅務規劃是妳最大的外掛。高資產客戶或高管最信賴妳這種滴水不漏的專業。按部就班，妳的穩定度就是最強的保險。",
-        5: "<b>自由型冒險家：</b>妳熱愛自由、討厭被束縛，天生具有頂級的商戰直覺與應變能力。妳最適合不拘一格的行銷模式。別把自己關在辦公室，多出門社交、打羽毛球，隨處都是妳的陌生開發獵場！",
-        6: "<b>奉獻型療癒者：</b>妳骨子裡充滿責任感與對人的關懷。妳最適合主攻醫療險、癌症險、長期照顧險等高度感性與關懷的議題。客戶生病時妳的陪伴和精準理賠，會讓妳成為他生命中的神。靠人情厚度取勝！",
-        7: "<b>分析型哲學家：</b>妳天生愛鑽研大數據、精明且邏輯強。理財型保單、財經趨勢、稅務資產傳承是妳的絕對主場。不要跟客戶聊虛的人情，直接拿出數據與市場分析，用無懈可擊的論點讓客戶心服口服。",
-        8: "<b>權力型企業家：</b>妳天生就是為大格局而生，極具商業頭腦。在保險業中，不要只滿足於個人簽單，妳的終極推薦走向是「瘋狂增員與打造千人團隊」。像大老闆一樣思考，用商戰思維帶領團隊翻盤！",
-        9: "<b>大愛型夢想家：</b>妳擁有極高的智慧與洞察力，能一眼看穿客戶內心真正的擔憂。妳適合將保險昇華為愛與責任的傳遞。擅長經營長期關係，當妳真心為客戶著想時，全天下的貴人都會主動來幫妳。"
+        1: "【開拓走向】適合挑戰陌生市場與高額保單。\n⚠️【盲點注意】容易流於主觀、單打獨鬥，切記多聆聽客戶真實需求，不要強烈推銷。",
+        2: "【合作走向】適合走人情、細膩的轉介紹路線。\n⚠️【盲點注意】容易不好意思開口要求成交（Close），要勇敢展現底氣，建立信任就要順理成章簽單。",
+        3: "【創意走向】適合透過網路、故事、感性行銷發揮影響力。\n⚠️【盲點注意】容易因情緒起伏影響訪量，必須維持自律的固定工作節奏，不可單憑熱情做事。",
+        4: "【守護走向】適合透過精準條款、家庭圖譜進行結構化分析。\n⚠️【盲點注意】有時過於生硬缺乏溫度，記得專業是底子，人情與問候才是打破客戶心防的引子。",
+        5: "【自由走向】天生具備頂級商戰直覺，陌生開發能力極強。\n⚠️【盲點注意】極容易三分鐘熱度、討厭繁瑣行政。請善用手冊的『人情溫度計』強迫自己做好售後服務與客戶定檢！",
+        6: "【奉獻走向】靠關懷、真心與極佳的理賠服務建立死忠客戶鏈。\n⚠️【盲點注意】容易把客戶的拒絕過度放大為心理傷害，要切記『保險是幫對方解決問題，拒絕是常態』。",
+        7: "【分析走向】用數據、稅務資產傳承與理財配置說服高資產客戶。\n⚠️【盲點注意】切忌陷入死板的數據辯論，別忘了客戶買保險往往是因為對家人的『愛』而非單純投報率。",
+        8: "【企業走向】適合挑戰大格局增員、建立高績效戰鬥團隊。\n⚠️【盲點注意】容易給部屬或客戶太高壓的目標感，多展現溫和包容的一面，更能收服人心。",
+        9: "【大愛走向】用崇高的使命感感召他人，利他思維極強。\n⚠️【盲點注意】容易為了面子或同情心而怯於談錢。要記住，幫助客戶做好完整規劃，才是最大的利他。"
     };
 
     let clients = JSON.parse(localStorage.getItem('ml_clients')) || [
-        {name: "陳大姐", family: "👵 獨居 / 姪子每週探望", days: 4, memo: "⚡️ 地雷：不喜歡別人聊到政治。🎂 重要日子：10/12 生日。喜歡吃軟一點的糕點。"},
-        {name: "林先生", family: "👨 妻:林太太 / 女:2歲", days: 40, memo: "⚡️ 地雷：討厭推銷感太重。最近在煩惱女兒幼兒園抽籤。"}
+        {name: "陳大姐", family: "夫:陳先生, 子:陳小明", days: 4, memo: "地雷：不聊政治。10/12生日。"},
+        {name: "林先生", family: "妻:林太太, 女:林小妞", days: 40, memo: "討厭推銷感。"}
     ];
 
     let schedules = JSON.parse(localStorage.getItem('ml_schedules')) || [
-        {date: "2026-07-01", event: "與陳大姐喝下午茶（送糕點破冰）"},
-        {date: "2026-07-06", event: "拜訪林先生（做新一季保單檢視）"}
+        {date: "2026-07-01", event: "拜訪陳大姐（送糕點破冰）"},
+        {date: "2026-07-08", event: "拜訪林先生（保單檢視）"}
     ];
 
     let userData = JSON.parse(localStorage.getItem('ml_user')) || null;
-
-    const quotes = [
-        "「女性最大的保險，是經營好自己。今天不開單，明天吃路邊攤。打起精神出門！」",
-        "「客戶拒絕妳不是討厭妳，是討厭不夠專業的妳。今天給我把專業拿出來，出陣！」",
-        "「人情世故就是妳的財富。把客戶當家人照顧，業績自然會開花結果！」",
-        "「與其等待機會，不如自己去敲門。曼黎字典裡，從來沒有放棄這兩個字！」"
-    ];
-    const compasses = ["正東方（貴人相助）", "正南方（簽約大吉）", "西北方（破冰順利）", "東北方（財運亨通）"];
 
     const topics = {
         news: "最近看新聞發現高通膨時代大家都在討論怎麼抗通膨，突然想到妳，最近工作還順利嗎？找時間一起喝杯咖啡，跟妳分享幾個實用的理財防禦小撇步呀！☕️",
@@ -373,30 +383,23 @@
 
     function init() {
         renderClients();
-        renderSchedules();
+        renderCalendar();
         loadUser();
-        changeTopic('news', document.querySelector('.tag-btn'));
-        refreshEnergy();
+        document.getElementById('topic-output').innerText = topics['news'];
     }
 
+    // 修正 3：生命靈數計算與精美備註呈現
     function calculateDestiny() {
         const name = document.getElementById('user-name').value;
         const bday = document.getElementById('user-birthday').value;
-        
-        if(!name || !bday) return alert("曼黎提示：請先填寫姓名與出生年月日，才能為妳指點迷津！");
+        if(!name || !bday) return alert("請填寫姓名與生日！");
 
         const numStr = bday.replace(/-/g, "");
         let sum = 0;
-        for (let i = 0; i < numStr.length; i++) {
-            sum += parseInt(numStr[i]);
-        }
-
+        for (let i = 0; i < numStr.length; i++) sum += parseInt(numStr[i]);
         while (sum > 9) {
-            let temp = 0;
-            let sumStr = sum.toString();
-            for (let i = 0; i < sumStr.length; i++) {
-                temp += parseInt(sumStr[i]);
-            }
+            let temp = 0; let s = sum.toString();
+            for (let i = 0; i < s.length; i++) temp += parseInt(s[i]);
             sum = temp;
         }
 
@@ -413,53 +416,6 @@
         }
     }
 
-    // 徹底修復顏色變數 Bug 的核心渲染函數
-    function renderClients() {
-        const list = document.getElementById('client-list');
-        list.innerHTML = "";
-        clients.forEach((c, index) => {
-            let color = "#ff4d4f"; // 滾燙紅
-            let statusText = "滾燙紅 (近日常聯絡)";
-            
-            if(c.days > 7 && c.days <= 30) { 
-                color = "#faad14"; // 溫暖黃
-                statusText = "溫暖黃 (該傳訊問候)"; 
-            } else if(c.days > 30) { 
-                color = "#1890ff"; // 冰藍冷
-                statusText = "冰藍冷 (斷聯警戒！)"; 
-            }
-
-            list.innerHTML += `
-                <div class="client-item">
-                    <div class="client-header">
-                        <span class="client-name"><span class="temp-dot" style="background:${color}"></span>${c.name}</span>
-                        <span style="font-size:11px; color:${color}; font-weight:600;">${statusText}</span>
-                    </div>
-                    <div class="tree-view">🌳 家族譜：${c.family || '暫無設定'}</div>
-                    <div class="memo-text">💬 <b>曼黎碎碎念備忘：</b><br>${c.memo}</div>
-                    <button class="btn" style="background:#f0e5e2; color:#555; margin-top:10px; padding:4px 8px; font-size:11px;" onclick="deleteClient(${index})">刪除客戶</button>
-                </div>
-            `;
-        });
-        localStorage.setItem('ml_clients', JSON.stringify(clients));
-    }
-
-    function addClient() {
-        const name = document.getElementById('c-name').value;
-        const family = document.getElementById('c-family').value;
-        const days = parseInt(document.getElementById('c-days').value);
-        const memo = document.getElementById('c-memo').value;
-        
-        if(!name) return alert("請輸入客戶姓名");
-        
-        clients.push({name, family, days, memo});
-        renderClients();
-        
-        document.getElementById('c-name').value = "";
-        document.getElementById('c-family').value = "";
-        document.getElementById('c-memo').value = "";
-    }
-
     function showDestinyResult() {
         if(!userData) return;
         document.getElementById('res-name').innerText = userData.name;
@@ -468,55 +424,141 @@
         document.getElementById('destiny-result').style.display = "block";
     }
 
-    function refreshEnergy() {
-        document.getElementById('quote-text').innerText = quotes[Math.floor(Math.random() * quotes.length)];
-        document.getElementById('compass-text').innerText = compasses[Math.floor(Math.random() * compasses.length)];
+    // 修正 1：家系圖核心生成函數
+    function openGenogram(index) {
+        const c = clients[index];
+        document.getElementById('geno-title').innerText = `${c.name} 的家族核心系圖`;
+        const visualZone = document.getElementById('geno-visual');
+        visualZone.innerHTML = "";
+
+        // 核心業務主節點
+        visualZone.innerHTML += `<div class="genogram-node" style="border-color:var(--wine-red); background:#fff5f5; font-weight:bold;">👑 主客戶: ${c.name}</div><br><div style="font-size:16px; color:var(--text-sub);">│</div><br>`;
+
+        if (c.family) {
+            // 切割逗號或頓號分開的家人資料 (例: 夫:張明, 子:張小寶)
+            const members = c.family.split(/[,，/]/);
+            members.forEach(m => {
+                if(m.trim()) {
+                    visualZone.innerHTML += `<div class="genogram-node">${m.trim()}</div>`;
+                }
+            });
+        } else {
+            visualZone.innerHTML += `<div style="font-size:12px; color:gray;">尚未輸入關係資料，請於欄位中以『關係:姓名』格式新增。</div>`;
+        }
+
+        document.getElementById('genogram-modal').style.display = "flex";
     }
 
-    function changeTopic(type, btn) {
-        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('topic-output').innerText = topics[type];
-    }
-    
-    function copyTopic() {
-        navigator.clipboard.writeText(document.getElementById('topic-output').innerText);
-        alert('曼黎提示：破冰話題複製成功！🚀');
-    }
+    function closeGenoModal() { document.getElementById('genogram-modal').style.display = "none"; }
 
-    function deleteClient(index) {
-        clients.splice(index, 1);
-        renderClients();
-    }
-
-    function renderSchedules() {
-        const list = document.getElementById('schedule-list');
+    function renderClients() {
+        const list = document.getElementById('client-list');
         list.innerHTML = "";
-        schedules.sort((a,b) => new Date(a.date) - new Date(b.date));
-        schedules.forEach((s, index) => {
+        clients.forEach((c, index) => {
+            let color = "#ff4d4f"; let statusText = "滾燙紅 (近日常聯絡)";
+            if(c.days > 7 && c.days <= 30) { color = "#faad14"; statusText = "溫慢黃 (該問候)"; }
+            else if(c.days > 30) { color = "#1890ff"; statusText = "冰藍冷 (斷聯警戒！)"; }
+
             list.innerHTML += `
-                <div class="schedule-item">
-                    <span>📅 <b>${s.date}</b> — ${s.event}</span>
-                    <span style="color:#ff4d4f; cursor:pointer; font-weight:bold; padding:0 6px;" onclick="deleteSchedule(${index})">✕</span>
+                <div class="client-item">
+                    <div class="client-header">
+                        <span class="client-name"><span class="temp-dot" style="background:${color}"></span>${c.name}</span>
+                        <!-- 修正 1：家系圖觸發按鈕 -->
+                        <button class="btn btn-gold" style="padding:4px 8px; font-size:11px;" onclick="openGenogram(${index})">📊 產生家系圖</button>
+                    </div>
+                    <div class="tree-view">🌳 關係鏈：${c.family || '未設定'}</div>
+                    <div class="memo-text">💬 <b>備忘事項：</b><br>${c.memo}</div>
+                    <button class="btn" style="background:#f0e5e2; color:#555; margin-top:10px; padding:4px 8px; font-size:11px;" onclick="deleteClient(${index})">刪除客戶</button>
                 </div>
             `;
         });
+        localStorage.setItem('ml_clients', JSON.stringify(clients));
+    }
+
+    // 修正 2：自製圖形化行事曆渲染核心
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-body');
+        grid.innerHTML = "";
+        
+        // 設定固定顯示 2026 年 7 月（配合示範與系統當前時序）
+        document.getElementById('calendar-month-title').innerText = "2026年 7月";
+        
+        const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+        weekdays.forEach(w => grid.innerHTML += `<div class="calendar-header-day">${w}</div>`);
+
+        // 2026年7月1日是星期三，前面空3格
+        for(let i=0; i<3; i++) grid.innerHTML += `<div></div>`;
+
+        // 渲染1號到31號
+        for(let d=1; d<=31; d++) {
+            const dateStr = `2026-07-${d.toString().padStart(2, '0')}`;
+            const hasEvent = schedules.some(s => s.date === dateStr);
+            const eventClass = hasEvent ? "has-event" : "";
+
+            grid.innerHTML += `
+                <div class="calendar-day ${eventClass}" onclick="showDayDetail('${dateStr}')">
+                    <span>${d}</span>
+                </div>
+            `;
+        }
         localStorage.setItem('ml_schedules', JSON.stringify(schedules));
+    }
+
+    function showDayDetail(dateStr) {
+        const box = document.getElementById('day-detail');
+        const dayEvents = schedules.filter(s => s.date === dateStr);
+        
+        if(dayEvents.length > 0) {
+            let html = `<b>📅 ${dateStr} 行程目的：</b><br>`;
+            dayEvents.forEach((ev, idx) => {
+                html += `<div style="margin-top:6px; display:flex; justify-content:space-between;">
+                            <span>📍 ${ev.event}</span>
+                            <span style="color:#ff4d4f; cursor:pointer;" onclick="deleteSchedule('${dateStr}', ${idx})">✕ 刪除</span>
+                         </div>`;
+            });
+            box.innerHTML = html;
+        } else {
+            box.innerHTML = `<b>📅 ${dateStr}</b><br>這天目前沒有安排任何訪量日程。`;
+        }
+        box.style.display = "block";
     }
 
     function addSchedule() {
         const date = document.getElementById('s-date').value;
         const event = document.getElementById('s-event').value;
-        if(!date || !event) return alert("請填妥日期與行程內容");
+        if(!date || !event) return alert("請選取日期與輸入行程目的");
         schedules.push({date, event});
-        renderSchedules();
+        renderCalendar();
+        showDayDetail(date);
         document.getElementById('s-event').value = "";
     }
 
-    function deleteSchedule(index) {
-        schedules.splice(index, 1);
-        renderSchedules();
+    function deleteSchedule(dateStr, idx) {
+        // 先找出在全域變數中的真實 index 並移除
+        const globalIdx = schedules.findIndex(s => s.date === dateStr);
+        if(globalIdx !== -1) {
+            schedules.splice(globalIdx + idx, 1);
+            renderCalendar();
+            showDayDetail(dateStr);
+        }
     }
+
+    function addClient() {
+        const name = document.getElementById('c-name').value;
+        const family = document.getElementById('c-family').value;
+        const days = parseInt(document.getElementById('c-days').value);
+        const memo = document.getElementById('c-memo').value;
+        if(!name) return alert("請輸入姓名");
+        clients.push({name, family, days, memo});
+        renderClients();
+        document.getElementById('c-name').value = "";
+        document.getElementById('c-family').value = "";
+        document.getElementById('c-memo').value = "";
+    }
+
+    function deleteClient(index) { clients.splice(index, 1); renderClients(); }
+    function changeTopic(type, btn) { document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('topic-output').innerText = topics[type]; }
+    function copyTopic() { navigator.clipboard.writeText(document.getElementById('topic-output').innerText); alert('曼黎提示：破冰話題複製成功！'); }
 
     window.onload = init;
 </script>
