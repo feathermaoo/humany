@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>胡曼黎全能手冊 — 完全體</title>
+    <title>胡曼黎全能手冊 — 完美修復版</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #1a1515 0%, #2c1e1e 100%);
@@ -13,10 +13,7 @@
             --wine-red: #722f37;
             --text-main: #2c2523;
             --text-sub: #786e6c;
-            --border: #e8e8e8;
-            --temp-hot: #ff4d4f;
-            --temp-warm: #faad14;
-            --temp-cold: #1890ff;
+            --border: #ebdcd8;
         }
 
         body {
@@ -63,29 +60,47 @@
 
         .section {
             background: #fcfcfd;
-            border: 1px solid var(--border);
+            border: 1px solid #f0eae6;
             border-radius: 20px;
-            padding: 16px;
+            padding: 18px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         .section-title {
             font-size: 15px;
             font-weight: 600;
             color: var(--wine-red);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* 模組 4：每日能量與底氣 */
+        /* 命運羅盤 */
+        .destiny-box {
+            background: linear-gradient(180deg, #fffdf9 0%, #fbf9f3 100%);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 16px;
+            padding: 14px;
+        }
+        
+        .result-box {
+            margin-top: 12px;
+            padding: 14px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid var(--gold);
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 金句與防護罩 */
         .gold-quote {
             font-size: 13.5px;
             line-height: 1.6;
             color: var(--text-main);
-            border-left: 3px solid var(--gold);
+            border-left: 3px solid var(--wine-red);
             padding-left: 12px;
             margin: 8px 0;
             font-style: italic;
@@ -100,20 +115,21 @@
             font-weight: 600;
         }
 
-        /* 模組 1 & 2：人情簿與溫度計 */
+        /* CRM 客戶卡片 */
         .client-item {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
+            border: 1px solid #f0eae6;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
             background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
         .client-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .client-name {
@@ -126,57 +142,75 @@
             height: 10px;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 6px;
+            margin-right: 8px;
         }
 
         .tree-view {
-            background: #f9f9fb;
-            padding: 8px;
+            background: #f8f9fa;
+            padding: 8px 10px;
             border-radius: 8px;
             font-size: 12px;
             color: var(--text-sub);
             margin-bottom: 8px;
-            border-left: 2px solid var(--border);
+            border-left: 2px solid var(--gold);
         }
 
         .memo-text {
             font-size: 12.5px;
             color: var(--text-main);
             background: #fffdf9;
-            padding: 6px;
-            border-radius: 6px;
+            padding: 8px;
+            border-radius: 8px;
             border: 1px dashed #ebdcd8;
+            line-white: 1.5;
         }
 
-        /* 表單輸入 */
+        /* 表單與按鈕 */
         input, textarea, select {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #dcd1cc;
+            border-radius: 10px;
             box-sizing: border-box;
             font-size: 13px;
+            background: #fff;
+            color: var(--text-main);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
         }
 
         .btn {
             background: var(--wine-red);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 12px;
-            transition: 0.3s;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        .btn:hover { background: #552228; }
+        .btn:hover { 
+            background: #552228;
+            transform: translateY(-1px);
+        }
 
         .btn-gold {
             background: linear-gradient(135deg, #d4af37 0%, #aa8416 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(170, 132, 22, 0.2);
+        }
+        
+        .btn-gold:hover {
+            box-shadow: 0 6px 14px rgba(170, 132, 22, 0.3);
         }
 
-        /* 模組 3：破冰話題 */
+        /* 破冰話題 */
         .tag-container {
             display: flex;
             flex-wrap: wrap;
@@ -185,12 +219,14 @@
         }
 
         .tag-btn {
-            background: #f0f0f0;
-            border: 1px solid #e0e0e0;
+            background: #f7f7f7;
+            border: 1px solid #e5e5e5;
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 6px 12px;
             font-size: 11px;
+            color: var(--text-sub);
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .tag-btn.active {
@@ -200,23 +236,22 @@
         }
 
         .output-box {
-            background: #f7f7f9;
-            border: 1px solid var(--border);
+            background: #f8f8fa;
+            border: 1px solid #eaeaea;
             border-radius: 12px;
-            padding: 12px;
+            padding: 14px;
             font-size: 13px;
             position: relative;
         }
 
-        /* 模組 5：日程規劃 */
-        .schedule-list {
-            font-size: 13px;
-        }
+        /* 日程規劃 */
+        .schedule-list { font-size: 13px; }
         .schedule-item {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
+            padding: 10px 0;
             border-bottom: 1px dashed var(--border);
+            align-items: center;
         }
     </style>
 </head>
@@ -225,17 +260,33 @@
 <div class="container">
     <header>
         <h1>胡曼黎 全能手冊</h1>
-        <div class="subtitle">金牌實戰 · 掌控全局</div>
+        <div class="subtitle">金牌實戰 · 命運掌控</div>
     </header>
 
-    <!-- 4. 每日能量與底氣 -->
     <div class="section">
-        <div class="section-title">🛡️ 拜訪前的心理防護罩 <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="refreshEnergy()">刷新</button></div>
-        <div>🧭 幸運方位：<span class="badge" id="compass-text">正東方（貴人相助）</span></div>
+        <div class="section-title">🔮 曼黎的命運羅盤 (生命靈數推薦)</div>
+        <div class="destiny-box">
+            <input type="text" id="user-name" placeholder="請輸入妳的名字或暱稱">
+            <input type="date" id="user-birthday">
+            <button class="btn btn-gold" style="width: 100%;" onclick="calculateDestiny()">啟動天命盤計算</button>
+            
+            <div class="result-box" id="destiny-result">
+                <div style="font-weight: 600; font-size: 15px; color: var(--wine-red); margin-bottom: 6px;">
+                    ✨ <span id="res-name">羽毛</span> 的生命靈數核心是：<span id="res-num" style="font-size: 20px; color:var(--gold-dark);">5</span> 號人
+                </div>
+                <div id="res-analysis" style="font-size: 13px; line-height: 1.6; color: var(--text-main);">
+                    導航生成中...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🛡️ 拜訪前的心理防護罩 <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="refreshEnergy()">補魔</button></div>
+        <div style="margin-bottom: 8px;">🧭 幸運方位：<span class="badge" id="compass-text">正東方（貴人相助）</span></div>
         <div class="gold-quote" id="quote-text">「女性最大的保險，是經營好自己。今天不開單，明天吃路邊攤。打起精神出門！」</div>
     </div>
 
-    <!-- 3. 破冰話題產生器 -->
     <div class="section">
         <div class="section-title">🚀 破冰話題產生器</div>
         <div class="tag-container">
@@ -246,18 +297,15 @@
             <button class="tag-btn" onclick="changeTopic('finance', this)">📈 財經熱門</button>
         </div>
         <div class="output-box">
-            <div id="topic-output" style="margin-bottom: 30px;">載入中...</div>
-            <button class="btn btn-gold" style="position:absolute; bottom:8px; right:8px; font-size:10px;" onclick="copyTopic()">複製</button>
+            <div id="topic-output" style="margin-bottom: 35px; line-height: 1.6;">載入中...</div>
+            <button class="btn btn-gold" style="position:absolute; bottom:8px; right:8px; font-size:11px; padding: 4px 10px;" onclick="copyTopic()">複製</button>
         </div>
     </div>
 
-    <!-- 1 & 2. 老上海人情簿 & 溫度計 -->
     <div class="section">
         <div class="section-title">👥 老上海人情簿 (互動 CRM)</div>
-        
-        <!-- 新增客戶表單 -->
-        <div style="background: #f0f0f2; padding: 10px; border-radius: 12px; margin-bottom: 12px;">
-            <b style="font-size:12px;">新增曼黎的重要客戶：</b>
+        <div style="background: #fdfbf9; padding: 14px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #ebdcd8;">
+            <b style="font-size:12.5px; color: var(--wine-red); display:block; margin-bottom:8px;">新增重要客戶資料：</b>
             <input type="text" id="c-name" placeholder="客戶姓名">
             <input type="text" id="c-family" placeholder="家族關係譜 (例: 夫:張明 / 子:張小寶)">
             <select id="c-days">
@@ -265,18 +313,15 @@
                 <option value="15">14天內聯絡過 (溫暖黃)</option>
                 <option value="40">超過30天沒聯絡 (冰藍冷)</option>
             </select>
-            <textarea id="c-memo" placeholder="曼黎碎碎念：客戶地雷、重要日子與細項事項"></textarea>
+            <textarea id="c-memo" placeholder="曼黎碎碎念備忘：客戶地雷、重要日子與細項事項" rows="3"></textarea>
             <button class="btn" style="width:100%" onclick="addClient()">存入人情簿</button>
         </div>
-
-        <!-- 客戶列表展示 -->
         <div id="client-list"></div>
     </div>
 
-    <!-- 5. 訪量日程規劃（下兩週） -->
     <div class="section">
         <div class="section-title">📅 下兩週訪量行程確認</div>
-        <div style="background: #f0f0f2; padding: 10px; border-radius: 12px; margin-bottom: 12px;">
+        <div style="background: #fdfbf9; padding: 14px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #ebdcd8;">
             <input type="date" id="s-date">
             <input type="text" id="s-event" placeholder="拜訪客戶與行程目的">
             <button class="btn" style="width:100%" onclick="addSchedule()">排定行程</button>
@@ -286,16 +331,29 @@
 </div>
 
 <script>
-    // 預設資料庫（若本機沒資料則啟用）
+    const destinyDatabase = {
+        1: "<b>開拓型戰士：</b>妳天生自帶領導力與強烈直覺。最適合妳的走向是獨立開拓陌生市場，或是挑戰高難度的資產配置大單。不要等著別人給資源，主動出擊，像胡曼黎一樣靠自己殺出一條血路！",
+        2: "<b>合作型軍師：</b>妳擁有極強的同理心與人際協調力。在保險業中，妳最適合走「深度人情與轉介紹」路線，阿姨和長輩會瘋狂被妳的貼心融化。善用敏銳度，多做家庭保單檢視，靠口碑建立無敵團隊！",
+        3: "<b>創意型演說家：</b>妳思維靈動、極具感染力。社群行銷（IG/Threads）或大型說明會是妳的黃金舞台。把死板的條款變成生動的故事，用幽默和魅力破冰，客戶會因為喜歡「妳這個人」而主動跟妳簽單。",
+        4: "<b>守護型架構師：</b>妳心思細密、極具條理。完美的家族譜分析、精準的法規條款與稅務規劃是妳最大的外掛。高資產客戶或高管最信賴妳這種滴水不漏的專業。按部就班，妳的穩定度就是最強的保險。",
+        5: "<b>自由型冒險家：</b>妳熱愛自由、討厭被束縛，天生具有頂級的商戰直覺與應變能力。妳最適合不拘一格的行銷模式。別把自己關在辦公室，多出門社交、打羽毛球，隨處都是妳的陌生開發獵場！",
+        6: "<b>奉獻型療癒者：</b>妳骨子裡充滿責任感與對人的關懷。妳最適合主攻醫療險、癌症險、長期照顧險等高度感性與關懷的議題。客戶生病時妳的陪伴和精準理賠，會讓妳成為他生命中的神。靠人情厚度取勝！",
+        7: "<b>分析型哲學家：</b>妳天生愛鑽研大數據、精明且邏輯強。理財型保單、財經趨勢、稅務資產傳承是妳的絕對主場。不要跟客戶聊虛的人情，直接拿出數據與市場分析，用無懈可擊的論點讓客戶心服口服。",
+        8: "<b>權力型企業家：</b>妳天生就是為大格局而生，極具商業頭腦。在保險業中，不要只滿足於個人簽單，妳的終極推薦走向是「瘋狂增員與打造千人團隊」。像大老闆一樣思考，用商戰思維帶領團隊翻盤！",
+        9: "<b>大愛型夢想家：</b>妳擁有極高的智慧與洞察力，能一眼看穿客戶內心真正的擔憂。妳適合將保險昇華為愛與責任的傳遞。擅長經營長期關係，當妳真心為客戶著想時，全天下的貴人都會主動來幫妳。"
+    };
+
     let clients = JSON.parse(localStorage.getItem('ml_clients')) || [
         {name: "陳大姐", family: "👵 獨居 / 姪子每週探望", days: 4, memo: "⚡️ 地雷：不喜歡別人聊到政治。🎂 重要日子：10/12 生日。喜歡吃軟一點的糕點。"},
-        {name: "林先生", family: "👨 妻:林太太 / 女:2歲", days: 20, memo: "⚡️ 地雷：討厭推銷感太重。最近在煩惱女兒幼兒園抽籤。"}
+        {name: "林先生", family: "👨 妻:林太太 / 女:2歲", days: 40, memo: "⚡️ 地雷：討厭推銷感太重。最近在煩惱女兒幼兒園抽籤。"}
     ];
 
     let schedules = JSON.parse(localStorage.getItem('ml_schedules')) || [
         {date: "2026-07-01", event: "與陳大姐喝下午茶（送糕點破冰）"},
         {date: "2026-07-06", event: "拜訪林先生（做新一季保單檢視）"}
     ];
+
+    let userData = JSON.parse(localStorage.getItem('ml_user')) || null;
 
     const quotes = [
         "「女性最大的保險，是經營好自己。今天不開單，明天吃路邊攤。打起精神出門！」",
@@ -313,40 +371,63 @@
         finance: "最近美股和台股波動真的蠻大的，很多人都在聊資產配置。其實在這種市場下，有一筆穩定增值、不受市場影響的配置才是最安心的底氣。這幾天找時間聊聊吧！📈"
     };
 
-    // 初始化渲染
     function init() {
         renderClients();
         renderSchedules();
+        loadUser();
         changeTopic('news', document.querySelector('.tag-btn'));
         refreshEnergy();
     }
 
-    // 4. 刷新金句與方位
-    function refreshEnergy() {
-        document.getElementById('quote-text').innerText = quotes[Math.floor(Math.random() * quotes.length)];
-        document.getElementById('compass-text').innerText = compasses[Math.floor(Math.random() * compasses.length)];
+    function calculateDestiny() {
+        const name = document.getElementById('user-name').value;
+        const bday = document.getElementById('user-birthday').value;
+        
+        if(!name || !bday) return alert("曼黎提示：請先填寫姓名與出生年月日，才能為妳指點迷津！");
+
+        const numStr = bday.replace(/-/g, "");
+        let sum = 0;
+        for (let i = 0; i < numStr.length; i++) {
+            sum += parseInt(numStr[i]);
+        }
+
+        while (sum > 9) {
+            let temp = 0;
+            let sumStr = sum.toString();
+            for (let i = 0; i < sumStr.length; i++) {
+                temp += parseInt(sumStr[i]);
+            }
+            sum = temp;
+        }
+
+        userData = { name, birthday: bday, number: sum };
+        localStorage.setItem('ml_user', JSON.stringify(userData));
+        showDestinyResult();
     }
 
-    // 3. 破冰話題切換
-    function changeTopic(type, btn) {
-        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('topic-output').innerText = topics[type];
-    }
-    function copyTopic() {
-        navigator.clipboard.writeText(document.getElementById('topic-output').innerText);
-        alert('曼黎提示：破冰話題複製成功！');
+    function loadUser() {
+        if(userData) {
+            document.getElementById('user-name').value = userData.name;
+            document.getElementById('user-birthday').value = userData.birthday;
+            showDestinyResult();
+        }
     }
 
-    // 1 & 2. 人情簿與溫度計渲染
+    // 徹底修復顏色變數 Bug 的核心渲染函數
     function renderClients() {
         const list = document.getElementById('client-list');
         list.innerHTML = "";
         clients.forEach((c, index) => {
-            let color = var(--temp-hot);
+            let color = "#ff4d4f"; // 滾燙紅
             let statusText = "滾燙紅 (近日常聯絡)";
-            if(c.days > 14 && c.days <= 30) { color = var(--temp-warm); statusText = "溫暖黃 (該傳訊問候)"; }
-            else if(c.days > 30) { color = var(--temp-cold); statusText = "冰藍冷 (斷聯警戒！)"; }
+            
+            if(c.days > 7 && c.days <= 30) { 
+                color = "#faad14"; // 溫暖黃
+                statusText = "溫暖黃 (該傳訊問候)"; 
+            } else if(c.days > 30) { 
+                color = "#1890ff"; // 冰藍冷
+                statusText = "冰藍冷 (斷聯警戒！)"; 
+            }
 
             list.innerHTML += `
                 <div class="client-item">
@@ -356,7 +437,7 @@
                     </div>
                     <div class="tree-view">🌳 家族譜：${c.family || '暫無設定'}</div>
                     <div class="memo-text">💬 <b>曼黎碎碎念備忘：</b><br>${c.memo}</div>
-                    <button class="btn" style="background:#ddd; color:#333; margin-top:8px; padding:2px 6px; font-size:10px;" onclick="deleteClient(${index})">刪除</button>
+                    <button class="btn" style="background:#f0e5e2; color:#555; margin-top:10px; padding:4px 8px; font-size:11px;" onclick="deleteClient(${index})">刪除客戶</button>
                 </div>
             `;
         });
@@ -368,13 +449,39 @@
         const family = document.getElementById('c-family').value;
         const days = parseInt(document.getElementById('c-days').value);
         const memo = document.getElementById('c-memo').value;
+        
         if(!name) return alert("請輸入客戶姓名");
+        
         clients.push({name, family, days, memo});
         renderClients();
-        // 清空表單
+        
         document.getElementById('c-name').value = "";
         document.getElementById('c-family').value = "";
         document.getElementById('c-memo').value = "";
+    }
+
+    function showDestinyResult() {
+        if(!userData) return;
+        document.getElementById('res-name').innerText = userData.name;
+        document.getElementById('res-num').innerText = userData.number;
+        document.getElementById('res-analysis').innerHTML = destinyDatabase[userData.number];
+        document.getElementById('destiny-result').style.display = "block";
+    }
+
+    function refreshEnergy() {
+        document.getElementById('quote-text').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+        document.getElementById('compass-text').innerText = compasses[Math.floor(Math.random() * compasses.length)];
+    }
+
+    function changeTopic(type, btn) {
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('topic-output').innerText = topics[type];
+    }
+    
+    function copyTopic() {
+        navigator.clipboard.writeText(document.getElementById('topic-output').innerText);
+        alert('曼黎提示：破冰話題複製成功！🚀');
     }
 
     function deleteClient(index) {
@@ -382,17 +489,15 @@
         renderClients();
     }
 
-    // 5. 日程規劃渲染
     function renderSchedules() {
         const list = document.getElementById('schedule-list');
         list.innerHTML = "";
-        // 排序行程
         schedules.sort((a,b) => new Date(a.date) - new Date(b.date));
         schedules.forEach((s, index) => {
             list.innerHTML += `
                 <div class="schedule-item">
                     <span>📅 <b>${s.date}</b> — ${s.event}</span>
-                    <span style="color:red; cursor:pointer;" onclick="deleteSchedule(${index})">❌</span>
+                    <span style="color:#ff4d4f; cursor:pointer; font-weight:bold; padding:0 6px;" onclick="deleteSchedule(${index})">✕</span>
                 </div>
             `;
         });
