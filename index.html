@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>胡曼黎全能手冊 — 78張正逆位完全體</title>
+    <title>胡曼黎全能手冊</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="胡曼黎手冊">
@@ -29,7 +29,7 @@
 
         body { 
             font-family: '-apple-system', 'PingFang TC', 'Noto Sans TC', sans-serif; 
-            background: var(--bg-gradient); min-height: 100vh; margin: 0; padding: 12px; 
+            background: var(--bg-gradient); min-height: 100vh; margin: 0; padding: 12px 12px 86px; 
             display: flex; justify-content: center; box-sizing: border-box; -webkit-tap-highlight-color: transparent; 
         }
         .container { width: 100%; max-width: 440px; background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); box-sizing: border-box; position: relative; }
@@ -52,6 +52,25 @@
         .nav-btn.active { background: var(--navy-premium); color: white; border-color: var(--navy-premium); }
         .app-panel { display: none; }
         .app-panel.active { display: block; }
+        .bottom-nav { position: fixed; left: 50%; bottom: 10px; transform: translateX(-50%); width: min(440px, calc(100% - 24px)); background: rgba(255,255,255,.96); border: 1px solid var(--border); border-radius: 18px; padding: 7px; box-shadow: 0 10px 30px rgba(0,0,0,.22); display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; z-index: 900; }
+        .bottom-tab { border: none; background: transparent; box-shadow: none; height: 44px; padding: 4px 0; border-radius: 12px; color: var(--text-sub); font-size: 10px; flex-direction: column; gap: 2px; }
+        .bottom-tab span { display: block; font-size: 18px; line-height: 1; }
+        .bottom-tab.active { background: var(--navy-premium); color: white; }
+        .section-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-bottom: 12px; text-align: left; }
+        .section-title { font-size: 13px; font-weight: 800; color: var(--navy-premium); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .mini-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .stat-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 10px; min-height: 72px; }
+        .stat-num { font-size: 18px; font-weight: 800; color: var(--premium-dark); margin-top: 4px; }
+        .action-list { display: grid; gap: 8px; }
+        .action-item { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-size: 12px; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+        .heat { color: #ef4444; letter-spacing: 1px; font-weight: 800; }
+        .person-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+        .person-card-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
+        .avatar-dot { width: 38px; height: 38px; border-radius: 14px; background: linear-gradient(135deg, var(--premium-gold), var(--premium-dark)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; flex: 0 0 auto; }
+        .pill { display: inline-block; background: #f1f5f9; border: 1px solid var(--border); border-radius: 999px; padding: 3px 7px; font-size: 10.5px; color: var(--text-sub); margin: 2px 2px 0 0; }
+        .task-check { width: 18px; height: 18px; border: 2px solid var(--premium-dark); border-radius: 5px; flex: 0 0 auto; }
+        .more-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .more-grid .btn { height: 48px; font-size: 12px; }
 
         .class-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
         .class-btn { padding: 10px 2px; font-size: 11px; font-weight: bold; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: white; color: var(--navy-premium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -123,14 +142,39 @@
             <div id="tarot-mini-result" style="margin-top:6px; font-size:11px; color:#e2e8f0; line-height:1.4; display:none; background:rgba(255,255,255,0.05); padding:6px; border-radius:4px; border-left:2px solid var(--premium-gold);"></div>
         </div>
 
-        <div class="nav-menu">
-            <button class="nav-btn active" onclick="switchPanel('panel-crm', this)">👥 人情簿</button>
-            <button class="nav-btn" onclick="switchPanel('panel-calendar', this)">📅 行事曆</button>
-            <button class="nav-btn" onclick="switchPanel('panel-ice', this)">🚀 破冰話題</button>
+        <!-- ==================== v2 首頁：今日戰情室 ==================== -->
+        <div id="panel-home" class="app-panel active">
+            <div class="section-card">
+                <div class="section-title">🔥 今日戰情室 <span id="today-label"></span></div>
+                <div class="mini-grid">
+                    <div class="stat-card"><div>今日待聯絡</div><div class="stat-num" id="stat-contact">0</div></div>
+                    <div class="stat-card"><div>今日約訪</div><div class="stat-num" id="stat-visit">0</div></div>
+                    <div class="stat-card"><div>今日生日</div><div class="stat-num" id="stat-birthday">0</div></div>
+                    <div class="stat-card"><div>7天未聯絡</div><div class="stat-num" id="stat-stale">0</div></div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">⭐ 高優先人脈</div>
+                <div id="priority-people" class="action-list"></div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">⚔️ 今日任務</div>
+                <div id="today-task-list" class="action-list"></div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">🏆 今日成就</div>
+                <div class="mini-grid">
+                    <div class="stat-card"><div>顧問等級</div><div class="stat-num" id="stat-level">LV1</div></div>
+                    <div class="stat-card"><div>今日積分</div><div class="stat-num" id="stat-score">+0</div></div>
+                </div>
+            </div>
         </div>
 
         <!-- ==================== 功能分頁一：人情簿 ==================== -->
-        <div id="panel-crm" class="app-panel active">
+        <div id="panel-crm" class="app-panel">
             
             <!-- Google 雲端安全防護艙 -->
             <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 12px; margin-bottom: 12px; font-size: 11.5px; text-align: left;">
@@ -229,6 +273,63 @@
                     <button class="btn btn-gold" style="padding:4px 8px; font-size:11px; width:auto; height:32px;" onclick="copyTopic()">複製</button>
                 </div>
             </div>
+        </div>
+
+        <!-- ==================== v2 任務中心：RPG 作戰 ==================== -->
+        <div id="panel-tasks" class="app-panel">
+            <div class="section-card">
+                <div class="section-title">⚔️ 任務中心 <span>保險顧問 RPG</span></div>
+                <div class="mini-grid">
+                    <div class="stat-card"><div>行動力</div><div class="stat-num" id="ability-action">10</div></div>
+                    <div class="stat-card"><div>社交力</div><div class="stat-num" id="ability-social">10</div></div>
+                    <div class="stat-card"><div>紀律</div><div class="stat-num" id="ability-discipline">10</div></div>
+                    <div class="stat-card"><div>財商</div><div class="stat-num" id="ability-money">10</div></div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-title">✅ 今日作戰清單</div>
+                <div class="action-list">
+                    <div class="action-item"><span><b>打電話 3 人</b><small class="reward-line">行動力 +10</small></span><span class="task-check"></span></div>
+                    <div class="action-item"><span><b>關心客戶 2 人</b><small class="reward-line">社交力 +10</small></span><span class="task-check"></span></div>
+                    <div class="action-item"><span><b>約訪 1 人</b><small class="reward-line">成交力 +15</small></span><span class="task-check"></span></div>
+                    <div class="action-item"><span><b>更新紀錄 5 人</b><small class="reward-line">紀律 +12</small></span><span class="task-check"></span></div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-title">👑 本月 Boss</div>
+                <div class="action-item"><span><b>完成 3 次面談</b><small class="reward-line">目前進度由行程與紀錄累積</small></span><span class="rank-count">HP 70%</span></div>
+            </div>
+        </div>
+
+        <!-- ==================== v2 更多：工具箱 ==================== -->
+        <div id="panel-more" class="app-panel">
+            <div class="section-card">
+                <div class="section-title">☰ 工具箱</div>
+                <div class="more-grid">
+                    <button class="btn btn-gold" onclick="drawTarotLiveEngine()">🔮 抽卡</button>
+                    <button class="btn" onclick="switchPanel('panel-ice')">🚀 破冰話題</button>
+                    <button class="btn" onclick="handleAuthClick()">🔐 Google 同步</button>
+                    <button class="btn" onclick="uploadBackupToDrive()">📤 雲端備份</button>
+                    <button class="btn" onclick="loadBackupFromDrive()">📥 雲端還原</button>
+                    <button class="btn" onclick="alert('主畫面圖示請放 icon-180.png，並從 Safari 加入主畫面。')">📱 主畫面圖示</button>
+                </div>
+            </div>
+            <div class="tarot-mini-zone">
+                <div style="color:var(--premium-gold); font-size:12px; font-weight:bold;">🔮 今日抽卡結果</div>
+                <div id="more-tarot-result" style="margin-top:6px; font-size:11px; color:#e2e8f0;">抽卡結果會同步顯示在上方抽籤區。</div>
+            </div>
+            <div class="section-card">
+                <div class="section-title">🛡️ 備份狀態</div>
+                <div id="more-sync-status" style="font-size:12px; color:var(--text-sub);">請先綁定 Google 帳戶。</div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <button class="btn bottom-tab active" onclick="switchPanel('panel-home', this)"><span>🏠</span>首頁</button>
+            <button class="btn bottom-tab" onclick="switchPanel('panel-crm', this)"><span>👥</span>人脈</button>
+            <button class="btn bottom-tab" onclick="switchPanel('panel-tasks', this)"><span>⚔️</span>任務</button>
+            <button class="btn bottom-tab" onclick="switchPanel('panel-calendar', this)"><span>📅</span>行程</button>
+            <button class="btn bottom-tab" onclick="switchPanel('panel-more', this)"><span>☰</span>更多</button>
         </div>
 
     </div>
@@ -346,8 +447,99 @@
         refreshClassElements(); init();
     }
 
-    function init() { drawFirstLevelTree(); renderCalendar(); callGeminiLive(); }
-    function switchPanel(panelId, btn) { document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-menu .nav-btn').forEach(b => b.classList.remove('active')); document.getElementById(panelId).classList.add('active'); btn.classList.add('active'); }
+    function init() { drawFirstLevelTree(); renderCalendar(); renderWarRoom(); callGeminiLive(); }
+    function switchPanel(panelId, btn) {
+        document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.bottom-tab').forEach(b => b.classList.remove('active'));
+        const panel = document.getElementById(panelId);
+        if (panel) panel.classList.add('active');
+        if (btn) btn.classList.add('active');
+        if (panelId === 'panel-home') renderWarRoom();
+    }
+
+    function getDateKey(date = new Date()) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    function getDaysAgo(dateText) {
+        if (!dateText) return 999;
+        const date = new Date(dateText);
+        if (Number.isNaN(date.getTime())) return 999;
+        return Math.floor((new Date() - date) / 86400000);
+    }
+
+    function getClientLastContact(c) {
+        if (c.lastContact) return c.lastContact;
+        if (c.visits && c.visits.length) return c.visits[c.visits.length - 1].date;
+        return "";
+    }
+
+    function getRelationshipHeat(c) {
+        const days = getDaysAgo(getClientLastContact(c));
+        if (days <= 3) return 5;
+        if (days <= 7) return 4;
+        if (days <= 14) return 3;
+        if (days <= 30) return 2;
+        return 1;
+    }
+
+    function getDealProbability(c) {
+        let score = 20;
+        if (c.clientType && c.clientType !== '非客戶') score += 20;
+        if (c.finance) score += 15;
+        if (c.decision) score += 15;
+        if (c.family) score += 10;
+        if (c.visits && c.visits.length) score += Math.min(20, c.visits.length * 5);
+        return Math.min(95, score);
+    }
+
+    function getNextAction(c) {
+        const days = getDaysAgo(getClientLastContact(c));
+        if (!c.phone) return "補電話";
+        if (days > 30) return "重新暖身";
+        if (days > 7) return "關心近況";
+        if (!c.finance || !c.decision) return "補情報";
+        if (getDealProbability(c) >= 60) return "約保單整理";
+        return "維護關係";
+    }
+
+    function renderWarRoom() {
+        const today = getDateKey();
+        const todayMd = today.slice(5);
+        const birthdayPeople = clients.filter(c => c.birthday && c.birthday.slice(5) === todayMd);
+        const stalePeople = clients.filter(c => getDaysAgo(getClientLastContact(c)) > 7);
+        const highPotential = clients
+            .map(c => ({ c, probability: getDealProbability(c), heat: getRelationshipHeat(c) }))
+            .sort((a, b) => b.probability - a.probability || a.heat - b.heat)
+            .slice(0, 3);
+
+        const todayLabel = document.getElementById('today-label');
+        if (todayLabel) todayLabel.innerText = today;
+        document.getElementById('stat-contact').innerText = Math.min(5, stalePeople.length);
+        document.getElementById('stat-visit').innerText = clients.filter(c => getNextAction(c).includes('約')).length;
+        document.getElementById('stat-birthday').innerText = birthdayPeople.length;
+        document.getElementById('stat-stale').innerText = stalePeople.length;
+        document.getElementById('stat-level').innerText = `LV${Math.max(1, Math.floor(clients.length / 3) + 1)}`;
+        document.getElementById('stat-score').innerText = `+${clients.length * 10}`;
+
+        const priority = document.getElementById('priority-people');
+        priority.innerHTML = highPotential.length ? highPotential.map(({ c, probability, heat }) => `
+            <div class="action-item">
+                <span><b>${c.name}</b><small class="reward-line"><span class="heat">${"🔥".repeat(heat)}${"░".repeat(5 - heat)}</span>｜成交率 ${probability}%｜下一步：${getNextAction(c)}</small></span>
+                <button class="btn" style="width:auto; height:30px; padding:0 10px; font-size:11px;" onclick="filterByClass('${c.clientClass || classList[0]}'); switchPanel('panel-crm', document.querySelectorAll('.bottom-tab')[1])">查看</button>
+            </div>
+        `).join('') : `<div class="action-item">目前還沒有足夠人脈資料，先新增一位人脈。</div>`;
+
+        document.getElementById('today-task-list').innerHTML = `
+            <div class="action-item"><span><b>打電話 3 人</b><small class="reward-line">優先找 7 天未聯絡名單</small></span><span class="task-check"></span></div>
+            <div class="action-item"><span><b>關心客戶 2 人</b><small class="reward-line">生日與關係需維護優先</small></span><span class="task-check"></span></div>
+            <div class="action-item"><span><b>約訪 1 人</b><small class="reward-line">成交率 60% 以上優先</small></span><span class="task-check"></span></div>
+            <div class="action-item"><span><b>更新紀錄 5 人</b><small class="reward-line">補齊家庭、財務、決策資訊</small></span><span class="task-check"></span></div>
+        `;
+    }
 
     // 💡 修正 1：78張全牌庫 ╳ 正逆位概率智慧出陣抽籤引擎
     function drawTarotLiveEngine() {
@@ -371,6 +563,8 @@
         }
 
         resZone.innerHTML = `🃏 <b>出陣密令：${cardPicked} ╳ ${positionText}</b><br>${tacticalAdvice}`;
+        const moreResult = document.getElementById('more-tarot-result');
+        if (moreResult) moreResult.innerHTML = resZone.innerHTML;
     }
 
     async function callGeminiLive() {
@@ -436,13 +630,30 @@
         const displayData = isSearching ? dataSource : dataSource.filter(c => c.clientClass === currentClassFilter);
         displayData.forEach((c) => {
             const globalIndex = clients.indexOf(c); let missingIntel = [];
+            const heat = getRelationshipHeat(c);
+            const dealProbability = getDealProbability(c);
+            const lastContact = getClientLastContact(c);
+            const lastContactLabel = lastContact ? `${getDaysAgo(lastContact)}天前` : "尚未聯絡";
+            const nextAction = getNextAction(c);
             if(!c.relation) missingIntel.push("背景關係"); if(!c.family) missingIntel.push("家系人脈網"); if(!c.finance) missingIntel.push("財務資產深度"); if(!c.decision) missingIntel.push("決策核心主導"); if(!c.competitor) missingIntel.push("同行競爭線");
             let alertHtml = missingIntel.length > 0 ? `<div style="color:#b91c1c; background:#fef2f2; padding:8px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">🚨 曼黎商戰情報缺口：尚缺乏【${missingIntel.join("、")}】戰略情報！</div>` : `<div style="color:#166534; background:#f0fdf4; padding:8px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">🏆 完美掌控：情報全面解鎖齊全！</div>`;
             let historyHtml = ""; if(c.visits) c.visits.forEach(v => historyHtml += `<div class="history-item"><span class="history-date">📅 ${v.date}</span>${v.detail}</div>`);
             
             list.innerHTML += `
                 <div class="client-item">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;"><span style="font-size:15px; font-weight:bold; color:var(--navy-premium);">${c.name}</span><div style="display:flex; gap:4px;"><button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openEditModal(${globalIndex})">✏️ 編輯</button><button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openGenogram(${globalIndex})">📊 家系</button></div></div>
+                    <div class="person-card-head">
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <div class="avatar-dot">${c.name ? c.name[0] : "人"}</div>
+                            <div>
+                                <div style="font-size:15px; font-weight:bold; color:var(--navy-premium);">${c.name}</div>
+                                <div class="heat">${"🔥".repeat(heat)}${"░".repeat(5 - heat)}</div>
+                                <span class="pill">最後聯絡：${lastContactLabel}</span>
+                                <span class="pill">下一步：${nextAction}</span>
+                                <span class="pill">成交率：${dealProbability}%</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:4px;"><button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openEditModal(${globalIndex})">✏️</button><button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openGenogram(${globalIndex})">📊</button></div>
+                    </div>
                     <div class="info-row"><span class="info-label">👤 客戶關係：</span>${c.relation || '⚠️ 未掌握'}</div><div class="info-row"><span class="info-label">🌳 家人關係：</span>${c.family || '⚠️ 未設定'}</div><div class="info-row"><span class="info-label">🎂 出生生日：</span>${c.birthday || '未設定'}</div><div class="info-row"><span class="info-label">📞 聯絡電話：</span>${c.phone || '未掌握'}</div><div class="info-row"><span class="info-label">📍 通訊地址：</span>${c.address || '未掌握'}</div><div class="info-row"><span class="info-label">🛡️ 客戶類別：</span><span style="background: #e0f2fe; color:#0369a1; padding:1px 6px; border-radius:4px; font-weight:bold;">${c.clientType || '非客戶'}</span></div>
                     ${alertHtml}
                     <div class="biz-premium-box"><div class="biz-title">💰 財務狀況：</div><div>${c.finance || '⚠️ 未掌握'}</div><div class="biz-title">⚖️ 決策者：</div><div>${c.decision || '⚠️ 未掌握'}</div><div class="biz-title">⚔️ 競爭者：</div><div>${c.competitor || '⚠️ 未掌握'}</div></div>
@@ -464,7 +675,7 @@
         if(topBar) { const detailPart = topBar.querySelector('.memo-detail').innerHTML; topBar.innerHTML = `👤 <b>${levelTitle}：${nameInput}</b> <span class="memo-detail">${detailPart}</span>`; }
         tempFamilyChips = []; renderFamilyChipsPool();
         document.getElementById('c-name').value = ""; document.getElementById('c-relation').value = ""; document.getElementById('c-phone').value = ""; document.getElementById('c-address').value = ""; document.getElementById('c-finance').value = ""; document.getElementById('c-decision').value = ""; document.getElementById('c-competitor').value = ""; document.getElementById('c-first-visit').value = ""; document.getElementById('c-birthday').value = "";
-        toggleAddForm(); filterByClass(cls);
+        toggleAddForm(); filterByClass(cls); renderWarRoom();
     }
 
     function openEditModal(globalIndex) {
@@ -476,7 +687,7 @@
         const idx = document.getElementById('edit-index').value; const targetClass = document.getElementById('edit-class').value; const nv = document.getElementById('edit-new-visit').value.trim();
         if(nv) { if(!clients[idx].visits) clients[idx].visits = []; clients[idx].visits.push({ date: new Date().toISOString().split('T')[0], detail: nv }); }
         clients[idx].name = document.getElementById('edit-name').value; clients[idx].relation = document.getElementById('edit-relation').value; clients[idx].phone = document.getElementById('edit-phone').value; clients[idx].address = document.getElementById('edit-address').value; clients[idx].family = document.getElementById('edit-family').value; clients[idx].clientClass = targetClass; clients[idx].finance = document.getElementById('edit-finance').value; clients[idx].decision = document.getElementById('edit-decision').value; clients[idx].competitor = document.getElementById('edit-competitor').value; clients[idx].birthday = document.getElementById('edit-birthday').value; clients[idx].clientType = document.getElementById('edit-client-type').value;
-        closeEditModal(); alert("修改變更成功！"); filterByClass(targetClass);
+        closeEditModal(); alert("修改變更成功！"); filterByClass(targetClass); renderWarRoom();
     }
 
     function openCustomClassModal() { document.getElementById('custom-class-modal').style.display = "flex"; }
@@ -503,7 +714,8 @@
             callback: (tokenResponse) => {
                 if (tokenResponse.error) {
                     console.error(tokenResponse);
-                    document.getElementById('sync-status').innerText = "狀態：Google 授權失敗";
+                document.getElementById('sync-status').innerText = "狀態：Google 授權失敗";
+                document.getElementById('more-sync-status').innerText = "狀態：Google 授權失敗";
                     alert("Google 授權失敗，請確認 OAuth Client ID 與授權網域。");
                     return;
                 }
@@ -513,9 +725,12 @@
                 document.getElementById('sync-btn').disabled = false;
                 document.getElementById('load-btn').disabled = false;
                 document.getElementById('sync-status').innerText = "狀態：已綁定，可以備份/還原";
+                document.getElementById('more-sync-status').innerText = "狀態：已綁定，可以備份/還原";
             }
         });
         document.getElementById('sync-status').innerText = "狀態：Google 模組已就緒，請綁定帳戶";
+        const moreStatus = document.getElementById('more-sync-status');
+        if (moreStatus) moreStatus.innerText = "狀態：Google 模組已就緒，請綁定帳戶";
     }
 
     function handleAuthClick() {
@@ -566,10 +781,12 @@
                 if (!resp.ok) throw new Error("建立備份失敗");
             }
             document.getElementById('sync-status').innerText = "✅ 備份成功";
+            document.getElementById('more-sync-status').innerText = "✅ 備份成功";
             alert("🛡️ Google 雲端備份成功！");
         } catch (e) {
             console.error(e);
             document.getElementById('sync-status').innerText = "⚠️ 備份失敗";
+            document.getElementById('more-sync-status').innerText = "⚠️ 備份失敗";
             alert("備份失敗，請確認 Google Drive API、OAuth Client ID、授權網域與 GitHub Pages 網址設定。");
         }
     }
@@ -581,6 +798,7 @@
             const backupFile = await findBackupFile();
             if (!backupFile) {
                 document.getElementById('sync-status').innerText = "狀態：找不到雲端備份";
+                document.getElementById('more-sync-status').innerText = "狀態：找不到雲端備份";
                 return alert("Google Drive 內找不到 humany_backup.json。");
             }
             const fileResp = await fetch(`https://www.googleapis.com/drive/v3/files/${backupFile.id}?alt=media`, {
@@ -595,10 +813,12 @@
             refreshClassElements();
             resetToFirstLevelTree();
             document.getElementById('sync-status').innerText = "✅ 還原成功";
+            document.getElementById('more-sync-status').innerText = "✅ 還原成功";
             alert("🏆 Google 雲端還原成功！");
         } catch (e) {
             console.error(e);
             document.getElementById('sync-status').innerText = "⚠️ 還原失敗";
+            document.getElementById('more-sync-status').innerText = "⚠️ 還原失敗";
             alert("還原失敗，請重新綁定帳戶後再試。");
         }
     }
@@ -608,7 +828,7 @@
     function renderCalendar() { const grid = document.getElementById('calendar-box'); grid.innerHTML = ""; for(let d=1; d<=31; d++) { grid.innerHTML += `<div class="calendar-day" onclick="showDayDetail('2026-07-${d}')">${d}</div>`; } }
     function showDayDetail(dateStr) { const box = document.getElementById('calendar-detail-box'); box.innerHTML = `<b>📅 ${dateStr} 行事曆</b><br>功能完備，排程鎖定中。`; }
     function addSchedule() { alert("行程排定成功！"); }
-    function deleteClient(index) { clients.splice(index, 1); filterByClass(currentClassFilter); }
+    function deleteClient(index) { clients.splice(index, 1); localStorage.setItem('ml_clients', JSON.stringify(clients)); filterByClass(currentClassFilter); renderWarRoom(); }
     function openGenogram(gIdx) { const c = clients[gIdx]; document.getElementById('geno-title').innerText = `${c.name} 家族核心`; const b = document.getElementById('geno-body'); b.innerHTML = `👑 ${c.name}<br>│<br>`; if(c.family) c.family.split(/[,，]/).forEach(m => b.innerHTML += `<span style="border:1px solid #ccc; padding:4px; margin:2px; display:inline-block; font-size:11px; border-radius:4px;">${m.trim()}</span>`); document.getElementById('geno-modal').style.display = "flex"; }
     function closeGenogram() { document.getElementById('geno-modal').style.display = "none"; }
     window.onload = function() { document.getElementById('login-screen').style.display = "block"; }
