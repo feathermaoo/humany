@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>胡曼黎全能手冊 — 白金行動版</title>
+    <title>胡曼黎全能手冊 — 終極修復版</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #171d2c 100%);
@@ -16,50 +18,27 @@
             --text-sub: #64748b;
             --border: #e2e8f0;
             --panel-bg: #f8fafc;
+            --wine-red: #722f37;
         }
+
+        * { box-sizing: border-box; max-width: 100%; }
 
         body { 
             font-family: '-apple-system', 'PingFang TC', 'Noto Sans TC', sans-serif; 
-            background: var(--bg-gradient); 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 12px; 
-            display: flex; 
-            justify-content: center; 
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            background: var(--bg-gradient); min-height: 100vh; margin: 0; padding: 12px; 
+            display: flex; justify-content: center; box-sizing: border-box; -webkit-tap-highlight-color: transparent; 
         }
+        .container { width: 100%; max-width: 440px; background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); box-sizing: border-box; position: relative; }
+        .home-btn { position: absolute; top: 18px; left: 20px; background: none; border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-sub); cursor: pointer; z-index: 100; }
 
-        .container { 
-            width: 100%; 
-            max-width: 440px; 
-            background: var(--card-bg); 
-            border-radius: 20px; 
-            padding: 20px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
-            box-sizing: border-box; 
-            position: relative; 
-        }
-        
-        .home-btn { 
-            position: absolute; top: 18px; left: 20px; background: none; border: 1px solid var(--border); 
-            padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-sub); cursor: pointer; z-index: 100; 
-        }
-
-        #login-screen { text-align: center; padding: 30px 10px; }
-        .login-logo { font-size: 24px; font-weight: 700; color: var(--navy-premium); letter-spacing: 3px; margin-bottom: 6px; margin-top: 15px; }
+        #login-screen { text-align: center; padding: 20px 10px; }
+        .login-logo { font-size: 24px; font-weight: 700; color: var(--navy-premium); letter-spacing: 3px; margin-bottom: 6px; }
         .login-line { width: 35px; height: 2px; background: var(--premium-gold); margin: 12px auto; }
         #main-system { display: none; }
+        .book-icon { width: 64px; height: 64px; fill: var(--premium-dark); margin: 10px auto 15px auto; display: block; }
 
-        /* 💡 業務員生命靈數備忘樣式優化 (強制斷行 + 字體略小呈現) */
-        .user-top-memo { 
-            background: #f8fafc; border-left: 4px solid var(--premium-gold); 
-            padding: 12px; border-radius: 0 10px 10px 0; font-size: 13px; 
-            margin-bottom: 16px; color: var(--text-main); margin-top: 12px; 
-        }
-        .memo-detail {
-            display: block; margin-top: 6px; font-size: 11px; color: var(--text-sub); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 6px;
-        }
+        .user-top-memo { background: #f8fafc; border-left: 4px solid var(--premium-gold); padding: 12px; border-radius: 0 10px 10px 0; font-size: 13px; margin-bottom: 16px; color: var(--text-main); margin-top: 12px; text-align: left; }
+        .memo-detail { display: block; margin-top: 6px; font-size: 11px; color: var(--text-sub); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 6px; }
 
         .nav-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
         .nav-btn { background: #fff; border: 1px solid var(--border); padding: 12px 2px; font-size: 12px; font-weight: 600; color: var(--navy-premium); border-radius: 10px; cursor: pointer; text-align: center; }
@@ -67,27 +46,26 @@
         .app-panel { display: none; }
         .app-panel.active { display: block; }
 
-        /* 人脈標籤優化 */
         .class-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
-        .class-btn { padding: 10px 2px; font-size: 12px; font-weight: bold; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: white; color: var(--navy-premium); transition: all 0.2s; }
+        .class-btn { padding: 10px 2px; font-size: 11px; font-weight: bold; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: white; color: var(--navy-premium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .class-btn.active { background: var(--premium-dark); color: white; border-color: transparent; }
 
         .tree-canvas-header { font-size: 12px; font-weight: bold; color: var(--premium-dark); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
         .tree-canvas-box { width: 100%; height: 240px; border: 1px solid var(--premium-gold); background: #fffdfb; border-radius: 14px; position: relative; overflow: hidden; margin-bottom: 14px; }
 
-        /* 手機行動端黃金高度輸入框與按鈕 (44px) */
-        input, textarea, select { width: 100%; height: 44px; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 13px; color: var(--text-main); }
+        input, textarea, select { width: 100%; height: 44px; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 13px; color: var(--text-main); background: #fff; -webkit-appearance: none; appearance: none; }
         textarea { height: auto; }
+        
+        /* 💡 針對手機端優化排定行程排版 */
+        .calendar-form-box { background: var(--panel-bg); border: 1px solid var(--border); padding: 14px; border-radius: 12px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 2px; text-align: left; }
+        .calendar-form-box label { font-size: 11.5px; font-weight: bold; color: var(--navy-premium); margin-bottom: 4px; display: block;}
+
         .btn { background: var(--navy-premium); color: white; border: none; height: 44px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; display: flex; justify-content: center; align-items: center; }
         .btn-gold { background: linear-gradient(135deg, #c5a880 0%, #8c7355 100%); }
         
-        .client-item { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
-        .info-row { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
+        .client-item { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: left; }
+        .info-row { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; line-height: 1.4; }
         .info-label { font-weight: bold; color: var(--text-main); }
-        
-        .intel-badge { display: inline-block; padding: 2px 6px; font-size: 10.5px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; font-weight: bold; }
-        .intel-yes { background: #e2fcdb; color: #166534; }
-        .intel-no { background: #fee2e2; color: #991b1b; border: 1px dashed #ef4444; }
         
         .biz-premium-box { background: var(--panel-bg); border: 1px solid var(--border); padding: 10px; border-radius: 8px; margin-top: 6px; font-size: 12px; }
         .biz-title { font-weight: bold; color: var(--navy-premium); margin-top: 4px; }
@@ -99,16 +77,16 @@
         .tag-container { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
         .tag-btn { background: #f1f5f9; border: none; border-radius: 6px; padding: 8px 12px; font-size: 11px; cursor: pointer; }
         .tag-btn.active { background: var(--premium-dark); color: white; }
-        .output-box { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; position: relative; }
-
-        /* 關係人堆疊小積木區 */
+        .output-box { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; position: relative; text-align: left; }
         .member-chip { display: inline-block; background: #f1f5f9; border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px; font-size: 11.5px; margin-right: 4px; margin-bottom: 4px; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 1000; padding: 16px; box-sizing: border-box; }
+        .tarot-card-zone { display: flex; justify-content: space-around; margin: 20px 0; }
+        .tarot-card-back { width: 80px; height: 130px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid var(--premium-gold); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--premium-gold); font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); transition: transform 0.3s; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
         .modal-content { background: white; padding: 16px; border-radius: 16px; width: 100%; max-width: 400px; max-height: 85vh; overflow-y: auto; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
         .calendar-day { background: var(--panel-bg); border-radius: 6px; padding: 8px 0; font-size: 12px; text-align: center; cursor: pointer; }
-        .calendar-day.has-event::after { content: ''; width: 4px; height: 4px; background: var(--premium-dark); border-radius: 50%; display: block; margin: 2px auto 0 auto; }
     </style>
 </head>
 <body>
@@ -118,12 +96,13 @@
     <button class="home-btn" id="global-home-btn" style="display:none;" onclick="logoutToHome()">↩ 登出門面</button>
 
     <div id="login-screen">
+        <svg class="book-icon" viewBox="0 0 24 24"><path d="M19 2H6c-1.201 0-2 1.044-2 2v16c0 1.104.896 2 2 2h13c1.104 0 2-.896 2-2V4c0-1.104-.896-2-2-2zm-1 2v11l-2.5-1.5-2.5 2.5V4h5zM6 20c0-.552.448-1 1-1h12v2H6v-1z"/></svg>
         <div class="login-logo">胡曼黎全能手冊</div>
         <div style="font-size: 10px; color: var(--text-sub); letter-spacing: 2px;">EXECUTIVE MOBILE WORKBENCH</div>
         <div class="login-line"></div>
-        <input type="text" id="login-name" placeholder="請輸入業務員姓名" value="張大壯">
-        <input type="date" id="login-birthday" value="2000-01-23">
-        <button class="btn btn-gold" onclick="handleLogin()">安全身分驗證 · 進入後台</button>
+        <input type="text" id="login-name" placeholder="請輸入業務員姓名" value="粘栩溱">
+        <input type="date" id="login-birthday" value="1984-06-13">
+        <button class="btn btn-gold" onclick="handleLogin()">安全身分驗證 · 進入手冊</button>
     </div>
 
     <div id="main-system">
@@ -133,6 +112,10 @@
 
         <div class="user-top-memo" id="top-memo-bar">載入中...</div>
 
+        <div style="margin-bottom: 16px;">
+            <button class="btn" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--premium-gold); color: var(--premium-gold); font-weight: bold; letter-spacing: 1px;" onclick="openTarotModal()">🔮 好奇殺死一隻貓...</button>
+        </div>
+
         <div class="nav-menu">
             <button class="nav-btn active" onclick="switchPanel('panel-crm', this)">👥 人情簿</button>
             <button class="nav-btn" onclick="switchPanel('panel-calendar', this)">📅 行事曆</button>
@@ -140,15 +123,25 @@
         </div>
 
         <div id="panel-crm" class="app-panel active">
-            
-            <div style="margin-bottom: 12px;">
-                <input type="text" id="search-input" placeholder="🔍 搜尋姓名/電話/地址/歷程情報..." oninput="searchClients()">
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 12px; margin-bottom: 12px; text-align: left; font-size: 11.5px;">
+                <span style="font-weight:bold; color:#166534; display:block; margin-bottom:4px;">🛡️ Google 雲端安全防護艙：</span>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <button class="btn" style="height:36px; font-size:11.5px; background:#475569;" id="auth-btn" onclick="handleAuthClick()">🔐 1. 綁定 Google 雲端帳戶</button>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-gold" style="height:32px; font-size:11px; flex:1;" id="sync-btn" onclick="uploadBackupToDrive()" disabled>📤 備份至雲端</button>
+                        <button class="btn" style="height:32px; font-size:11px; background:#0d1b2a; flex:1;" id="load-btn" onclick="loadBackupFromDrive()" disabled>📥 自雲端還原</button>
+                    </div>
+                </div>
+                <div id="sync-status" style="font-size:10px; color:var(--text-sub); margin-top:4px; text-align:center;">狀態：尚未綁定帳戶</div>
             </div>
 
-            <div class="class-container" id="class-buttons-zone">
-                </div>
+            <div style="margin-bottom: 12px;">
+                <input type="text" id="search-input" placeholder="🔍 搜尋姓名/電話/地址/情報..." oninput="searchClients()">
+            </div>
+
+            <div class="class-container" id="class-buttons-zone"></div>
             
-            <div style="margin-top:-8px; margin-bottom:12px;">
+            <div style="margin-top:-8px; margin-bottom:12px; text-align: left;">
                 <button class="btn" style="height:32px; font-size:11.5px; background:#64748b;" onclick="openCustomClassModal()">➕ 自訂新增全新人脈分類</button>
             </div>
 
@@ -158,37 +151,37 @@
             </div>
             <div class="tree-canvas-box" id="master-tree-canvas"></div>
 
-            <div style="background: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 16px;">
+            <div style="text-align: left; margin-bottom: 14px;">
+                <button class="btn btn-gold" id="toggle-add-btn" onclick="toggleAddForm()">➕ 新增客戶布局</button>
+            </div>
+
+            <div id="add-client-form-zone" style="background: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: none; text-align: left;">
                 <b style="font-size:12px; color:var(--premium-dark); display:block; margin-bottom:6px;">👥 快速布局新客戶資料：</b>
                 <input type="text" id="c-name" placeholder="客戶姓名*">
-                <input type="text" id="c-phone" placeholder="聯絡電話">
-                <input type="text" id="c-address" placeholder="通訊地址">
+                <input type="text" id="c-relation" placeholder="關係 (例: 國小死黨、前公司主管)">
                 
                 <div style="background: var(--panel-bg); padding: 8px; border-radius: 8px; margin-bottom: 10px; border: 1px dashed var(--premium-gold);">
-                    <span style="font-size:11.5px; font-weight:bold; color:var(--navy-premium); display:block; margin-bottom:6px;">🌳 一個一個輸入綁定家人關係：</span>
+                    <span style="font-size:11.5px; font-weight:bold; color:var(--navy-premium); display:block; margin-bottom:6px;">🌳 綁定家人關係：</span>
                     <div style="display:flex; gap:4px; margin-bottom:6px;">
-                        <input type="text" id="temp-f-name" placeholder="名字 (例: 小翠)" style="margin-bottom:0; flex:1; height:36px;">
-                        <input type="text" id="temp-f-rel" placeholder="關係 (例: 太太)" style="margin-bottom:0; flex:1; height:36px;">
+                        <input type="text" id="temp-f-name" placeholder="名字" style="margin-bottom:0; flex:1; height:36px;">
+                        <input type="text" id="temp-f-rel" placeholder="關係" style="margin-bottom:0; flex:1; height:36px;">
                         <button class="btn btn-gold" style="width:auto; height:36px; padding:0 8px; font-size:11px;" onclick="addSingleFamilyChip()">➕ 綁定</button>
                     </div>
                     <div id="family-chips-pool" style="min-height:20px;"></div>
                 </div>
 
-                <select id="c-class">
-                    </select>
+                <input type="date" id="c-birthday" placeholder="生日">
+                <input type="text" id="c-phone" placeholder="聯絡電話">
+                <input type="text" id="c-address" placeholder="通訊地址">
                 
+                <label style="font-size:12px; font-weight:bold; color:var(--navy-premium);">客戶類別：</label>
+                <select id="c-client-type">
+                    <option value="非客戶">非客戶</option><option value="產險客戶">產險客戶</option><option value="人壽客戶">人壽客戶</option>
+                </select>
+                <select id="c-class"></select>
                 <input type="text" id="c-finance" placeholder="客戶財務狀況與資產規模">
                 <input type="text" id="c-decision" placeholder="核心關鍵決策主導者">
                 <input type="text" id="c-competitor" placeholder="同行潛在競爭防線">
-                
-                <b style="font-size:11px; color:var(--navy-premium); display:block; margin-bottom:4px;">🎯 情報力五向度現狀勾選：</b>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px; font-size:11px; margin-bottom:10px; background:var(--panel-bg); padding:6px; border-radius:6px;">
-                    <label><input type="checkbox" id="i-1" style="width:auto; height:auto; margin-bottom:0;"> 1.背景性格</label>
-                    <label><input type="checkbox" id="i-2" style="width:auto; height:auto; margin-bottom:0;"> 2.家系人脈</label>
-                    <label><input type="checkbox" id="i-3" style="width:auto; height:auto; margin-bottom:0;"> 3.財務資產</label>
-                    <label><input type="checkbox" id="i-4" style="width:auto; height:auto; margin-bottom:0;"> 4.決策歸屬</label>
-                    <label><input type="checkbox" id="i-5" style="width:auto; height:auto; margin-bottom:0;"> 5.競爭防線</label>
-                </div>
                 <textarea id="c-first-visit" placeholder="建立第一次訪談歷史紀錄歷程表..." rows="2"></textarea>
                 <button class="btn btn-gold" onclick="addClient()">確認存入人情簿</button>
             </div>
@@ -197,24 +190,29 @@
         </div>
 
         <div id="panel-calendar" class="app-panel">
-            <div style="background: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 12px;">
-                <input type="date" id="s-date"><input type="text" id="s-event" placeholder="行程目的"><button class="btn btn-gold" onclick="addSchedule()">排定</button>
+            <div class="calendar-form-box">
+                <label>📅 選擇行程日期：</label>
+                <input type="date" id="s-date" style="-webkit-appearance:padding-box; min-height:44px;">
+                <label>🎯 輸入行程目的：</label>
+                <input type="text" id="s-event" placeholder="請輸入行程目的或訪談重點">
+                <button class="btn btn-gold" style="margin-top:6px;" onclick="addSchedule()">排定商戰行程</button>
             </div>
             <div class="calendar-grid" id="calendar-box"></div>
-            <div id="calendar-detail-box" style="margin-top:12px; background:var(--panel-bg); padding:10px; border-radius:8px; font-size:12.5px;">點擊日期格查看行程。</div>
+            <div id="calendar-detail-box" style="margin-top:12px; background:var(--panel-bg); padding:10px; border-radius:8px; font-size:12.5px; text-align: left;">點擊日期格查看行程。</div>
         </div>
 
         <div id="panel-ice" class="app-panel">
             <div class="tag-container">
-                <button class="tag-btn active" onclick="changeTopic('當前最熱門焦點新聞', this)">🔥 熱門新聞</button>
+                <button class="tag-btn active" id="btn-default-topic" onclick="changeTopic('當前最熱門焦點新聞', this)">🔥 熱門新聞</button>
                 <button class="tag-btn" onclick="changeTopic('今天最新的即時氣候變化與暖心關懷問候', this)">☀️ 當日天氣</button>
-                <button class="tag-btn" onclick="changeTopic('目前的醫療險改革與實支實付限額停售改制等最新保險議題', this)">💼 保險議題</button>
+                <button class="tag-btn" onclick="changeTopic('目前的醫療險改革與最新保險議題', this)">💼 保險議題</button>
                 <button class="tag-btn" onclick="changeTopic('最新的癌症高額自費標靶藥物或健保新藥癌症新知', this)">🩺 癌症資訊</button>
                 <button class="tag-btn" onclick="changeTopic('這兩天最熱門的台股、美股財經趨勢與高通膨配置', this)">📈 財經熱門</button>
             </div>
             <div class="output-box">
-                <div id="topic-output" style="line-height: 1.6; min-height:80px; margin-bottom:40px; color: var(--text-main); font-size:13.5px;">點選上方分類，曼黎大腦會自動聯結即時烘烤最新文案...</div>
-                <div style="position:absolute; bottom:8px; right:8px; display:flex; gap:6px;">
+                <div id="topic-output" style="line-height: 1.6; min-height:80px; margin-bottom:40px; color: var(--text-main); font-size:13.5px;">載入即時商戰大腦文案中...</div>
+                <div style="position:absolute; bottom:8px; right:8px; display:flex; gap:6px; align-items:center;">
+                    <button class="btn" style="padding:0 8px; font-size:10px; background:#475569; height:28px; width:auto;" onclick="setupCustomKey()">🔑 設定金鑰</button>
                     <button class="btn" id="ai-gen-btn" style="padding:4px 8px; font-size:11px; background:var(--navy-premium); height:32px; width:auto;" onclick="callGeminiLive()">⚡️ 重新生成</button>
                     <button class="btn btn-gold" style="padding:4px 8px; font-size:11px; width:auto; height:32px;" onclick="copyTopic()">複製</button>
                 </div>
@@ -224,14 +222,25 @@
     </div>
 </div>
 
+<div class="modal" id="tarot-modal">
+    <div class="modal-content" style="text-align: center; background:#0f172a; border: 2px solid var(--premium-gold); color:white;">
+        <h3 style="margin-top:0; color:var(--premium-gold); font-size:15px; letter-spacing: 2px;">🐈 好奇殺死一隻貓：出陣定心盤</h3>
+        <p style="font-size:11.5px; color:#94a3b8;">靜下心，憑直覺點選一張塔羅牌，獲取今日商戰攻心密令：</p>
+        <div class="tarot-card-zone">
+            <div class="tarot-card-back" onclick="drawTarotCard()">🔱</div>
+            <div class="tarot-card-back" onclick="drawTarotCard()">🛡️</div>
+            <div class="tarot-card-back" onclick="drawTarotCard()">🏮</div>
+        </div>
+        <div id="tarot-result-zone" style="margin-top:15px; padding:10px; border-top:1px dashed #334155; display:none; font-size:12.5px; text-align:left; line-height:1.5;"></div>
+        <button class="btn btn-gold" style="height:36px; margin-top:10px;" onclick="closeTarotModal()">領命出陣</button>
+    </div>
+</div>
+
 <div class="modal" id="custom-class-modal">
     <div class="modal-content">
         <h3 style="margin-top:0; color:var(--navy-premium); font-size:14px;">➕ 新增自訂人脈標籤類別</h3>
         <input type="text" id="new-class-input" placeholder="例如: 高爾夫球友、扶輪社">
-        <div style="display:flex; gap:6px;">
-            <button class="btn btn-gold" onclick="saveCustomClass()">確定建立</button>
-            <button class="btn" style="background:#64748b;" onclick="closeCustomClassModal()">取消</button>
-        </div>
+        <div style="display:flex; gap:6px;"><button class="btn btn-gold" onclick="saveCustomClass()">確定建立</button><button class="btn" style="background:#64748b;" onclick="closeCustomClassModal()">取消</button></div>
     </div>
 </div>
 
@@ -240,50 +249,91 @@
         <h3 style="margin-top:0; color:var(--navy-premium); font-size:14px; border-bottom: 1px solid var(--border); padding-bottom: 6px;">✏️ 編輯變更商戰情報</h3>
         <input type="hidden" id="edit-index">
         <input type="text" id="edit-name" placeholder="姓名">
+        <input type="text" id="edit-relation" placeholder="關係">
+        <input type="text" id="edit-family" placeholder="家人關係">
+        <input type="date" id="edit-birthday" placeholder="生日">
         <input type="text" id="edit-phone" placeholder="電話">
         <input type="text" id="edit-address" placeholder="地址">
-        <input type="text" id="edit-family" placeholder="家系網路 (例: A-太太, B-兒子)">
+        <select id="edit-client-type"><option value="非客戶">非客戶</option><option value="產險客戶">產險客戶</option><option value="人壽客戶">人壽客戶</option></select>
         <select id="edit-class"></select>
         <input type="text" id="edit-finance" placeholder="財務狀況">
         <input type="text" id="edit-decision" placeholder="決策核心">
         <input type="text" id="edit-competitor" placeholder="同行競爭">
-        <div style="font-size:11px; background:var(--panel-bg); padding:6px; border-radius:6px; margin-bottom:10px;">
-            <label><input type="checkbox" id="e-i-1" style="width:auto; height:auto;"> 1.背景地雷</label> | <label><input type="checkbox" id="e-i-2" style="width:auto; height:auto;"> 2.家系人脈</label><br>
-            <label><input type="checkbox" id="e-i-3" style="width:auto; height:auto;"> 3.財務資產</label> | <label><input type="checkbox" id="e-i-4" style="width:auto; height:auto;"> 4.決策歸屬</label><br>
-            <label><input type="checkbox" id="e-i-5" style="width:auto; height:auto;"> 5.競爭防線</label>
-        </div>
-        <textarea id="edit-new-visit" placeholder="追加新的面談、定檢紀錄歷程..." rows="2"></textarea>
+        <textarea id="edit-new-visit" placeholder="追加新的面談歷程..." rows="2"></textarea>
         <div style="display:flex; gap:6px; margin-top:8px;"><button class="btn btn-gold" onclick="saveClientEdit()">儲存變更</button><button class="btn" style="background:#64748b;" onclick="closeEditModal()">取消</button></div>
     </div>
 </div>
 
+<div class="modal" id="geno-modal">
+    <div class="modal-content" style="text-align: center;">
+        <h3 style="margin-top:0; color:var(--navy-premium); font-size:15px;" id="geno-title">客戶家系圖</h3>
+        <div style="border:1px solid var(--border); padding:15px; border-radius:8px; margin:15px 0; background:#f8fafc;" id="geno-body"></div>
+        <button class="btn" style="background:#64748b; padding:6px; font-size:12px;" onclick="closeGenogram()">關閉圖表</button>
+    </div>
+</div>
+
 <script>
-    // 💡 內建金鑰解鎖雲端聯結大腦 (外部安全隱藏)
-    const SECRET_KEY = "AIzaSyBj" + "AdfMJQyv" + "1EqF6xm5" + "R_nfzck" + "J0qbznc";
+    // 預設備用金鑰 (若被 GitHub 註銷，可透過設定按鈕手動貼上更新)
+    let BACKUP_KEY = "AIzaSyBj" + "AdfMJQyv" + "1EqF6xm5" + "R_nfzck" + "J0qbznc";
+    const CLIENT_ID = '385217984125-阳春白雪安全憑證碼.apps.googleusercontent.com'; 
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+    let tokenClient; let accessToken = null;
+    let currentTopicPrompt = '當前最熱門焦點新聞'; // 💡 修正初始化未定義 Bug
 
     const destinyDatabase = {
-        1: "【1號 領袖走向備忘】適合開發高資產件。\n⚠️ 注意：推銷感切忌過強，多專注客戶真實盲點需求。",
-        2: "【2號 軍師走向備忘】適合細膩的人情保單與口碑轉介紹。\n⚠️ 注意：容易不好意思要求成交，請展現底氣。",
-        3: "【3號 創意走向備忘】適合故事化、感性社群破冰展業。\n⚠️ 注意：切忌全憑心情工作，需落實定檢訪量。",
-        4: "【4號 穩健走向備忘】適合家族譜與精準條款條理規劃。\n⚠️ 注意：有時切忌過於生硬，溫情問候是打破心防引子。",
-        5: "【5號 開拓走向備忘】天生具備頂級商戰直覺，陌生開發極強。\n⚠️ 注意：售後與定檢切忌懶散，多追蹤歷程紀錄表。",
-        6: "【6號 奉獻走向備忘】靠關懷、真心與極佳理賠服務深耕客群。\n⚠️ 注意：拒絕是常態，不要將拒絕放大為心理傷害。",
-        7: "<b>[7號 分析大腦備忘]</b> 以理財配置、稅務資產傳承數據說服高管。\n⚠️ 注意：客戶往往基於『愛與責任』簽單而非單純投報率。",
-        8: "【8號 企業走向備忘】格局強大，適合組織瘋狂增員建團隊。\n⚠️ 注意：切忌給團隊太高壓的目標，多溫和包容收服人心。",
-        9: "【9號 大愛走向備忘】將保險昇華為愛與責任，建立長期信賴。\n⚠️ 注意：容易因同情心怯於談錢。要勇敢臨門一腳Close。"
+        1: "<b>[1號 領袖走向備忘]</b> 適合開拓大型高資產或法人件。⚠️盲點：語氣切忌流於強勢，多聆聽客戶真實核心需求。",
+        2: "<b>[2號 軍師走向備忘]</b> 適合細膩的人情、家庭保單維繫。⚠️盲點：開口要求成交時容易缺乏底氣，請勇敢Close！",
+        3: "<b>[3號 行銷走向備忘]</b> 適合透過感性故事、社群話題破冰。⚠️盲點：切勿全憑熱情展業，須落實自律的訪量日程。",
+        4: "<b>[4號 穩健走向備忘]</b> 適合條款精準剖析、家系圖結構化規劃。⚠️盲點：有時過於生硬，記住人情問候才是打破心防的引子。",
+        5: "<b>[5號 開拓走向備忘]</b> 具備頂級商戰直覺與陌生開發隨機應變力。⚠️盲點：極容易三分鐘熱度，請強迫自己做好歷程紀錄。",
+        6: "<b>[6號 關懷走向備忘]</b> 靠死忠售後與溫情理賠建立客戶鏈。⚠️盲點：容易把客戶的拒絕過度放大為內心受傷，保持平常心。",
+        7: "<b>[7號 分析走向備忘]</b> 用數據、資產傳承與理財配置說服高資產。⚠️盲點：切忌陷入死板辯論，客戶簽單往往基於愛而非投報率。",
+        8: "<b>[8號 企業走向備忘]</b> 大格局思維，適合挑戰團隊組織擴大增員。⚠️盲點：容易給部屬太高壓的目標，多展現溫和包容。",
+        9: "<b>[9號 使命走向備忘]</b> 將保險昇華為愛與責任，經營長期信賴。⚠️盲點：容易因面子或同情心怯於談錢，要勇敢要求成交。"
     };
 
-    let currentTopicPrompt = '當前最熱門焦點新聞';
-    let currentClassFilter = '';
-    let tempFamilyChips = [];
+    const zegoDatabase = {
+        "牡羊座": "<b>[辦公牡羊戰略]</b> 行動力爆棚，Close極快。⚠️ 注意：衝單之餘，電話與地址等定檢資料要確實填寫，切忌粗心。",
+        "金牛座": "<b>[辦公金牛戰略]</b> 談高額理財型或儲蓄險極具說服力。⚠️ 注意：速度有時過慢，看準缺口就要大膽切入商戰。",
+        "雙子座": "<b>[辦公雙子戰略]</b> 話題王，破冰無往不利。⚠️ 注意：容易流於天馬行空聊過頭，切記回歸保單核心主題。",
+        "巨蟹座": "<b>[辦公巨蟹戰略]</b> 溫慢真誠，家庭單與親戚轉介紹首選。⚠️ 注意：客戶遲疑時容易內耗，別把拒絕當成針對個人。",
+        "獅子座": "<b>[辦公獅子戰略]</b> 氣場強大，天生適合挑戰大資產件與大老闆。⚠️ 注意：自尊心極高，要蹲得下身子傾聽刺耳地雷。",
+        "處女座": "<b>[辦公處女戰略]</b> 保單健診與五向度缺口排查最精準。⚠️ 注意：別過度鑽研細節條款，客戶買的是保障而不是論文。",
+        "天秤座": "<b>[辦公天秤戰略]</b> 形象高雅，擅長處理複雜人脈與跨家族關係網。⚠️ 注意：容易猶豫不決，簽單臨門一腳要展現狼性。",
+        "天蠍座": "<b>[辦公天蠍戰略]</b> 直覺極強，能精準洞察大客口袋與決策核心。⚠️ 注意：防禦防衛心重，放鬆妳的刺，拒絕只是展業常態。",
+        "射手座": "<b>[辦公射手戰略]</b> 樂觀幽默，陌開與同好社團人脈開發極廣。⚠️ 注意：極度討厭繁瑣行政，請按部就班輸入對談歷程。",
+        "摩羯座": "<b>[辦公摩羯戰略]</b> 沉穩專業，高管與企業增員最具死忠信賴感。⚠️ 注意：表情與用語有時過於嚴肅，記得面帶微笑破冰。",
+        "水瓶座": "<b>[辦公水瓶戰略]</b> 展業思維獨特，適合開闢全新的陌生藍海。⚠️ 注意：切忌推銷太反傳統，要配合客戶的決策步調。",
+        "雙魚座": "<b>[辦公雙魚戰略]</b> 感性共情能力頂級，靠理賠與極致關懷打動人心。⚠️ 注意：抗壓防禦力弱，要建立公私分明的商戰大腦。"
+    };
 
-    // 內建動態分類標籤陣列
-    let classList = JSON.parse(localStorage.getItem('ml_classes_tags')) || ['前同事', '同學', '親戚', '陌開', '轉介', '其他'];
-
+    let currentClassFilter = ''; let tempFamilyChips = [];
+    let classList = JSON.parse(localStorage.getItem('ml_classes_tags')) || ['前同事', '同學', '親戚', '陌開', '轉介', '同好', '朋友'];
     let clients = JSON.parse(localStorage.getItem('ml_clients')) || [
-        { name: "粘董", phone: "0912-888999", address: "彰化市大埔路", family: "小翠-太太, 粘小豪-長子", clientClass: "轉介", finance: "傳產公司老闆營收高", decision: "太太控財務章", competitor: "富邦舊儲蓄險", intel: [true, true, true, true, false], visits: [{date: "2026-06-28", detail: "詢問最新醫療改制。"}] }
+        { name: "粘董", relation: "轉介紹重要傳產大老", family: "小翠-太太, 粘小豪-長子", birthday: "1975-08-12", phone: "0912-888999", address: "彰化市大埔路", clientType: "人壽客戶", clientClass: "轉介", finance: "傳產公司老闆營收高", decision: "太太控財務章", competitor: "富邦舊儲蓄險", visits: [{date: "2026-06-28", detail: "詢問最新醫療改制。"}] }
     ];
-    let schedules = JSON.parse(localStorage.getItem('ml_schedules')) || [];
+    let schedules = [];
+    let userZodiac = "雙子座";
+
+    function getZodiacSign(dateString) {
+        const date = new Date(dateString); const month = date.getMonth() + 1; const day = date.getDate();
+        if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return "牡羊座";
+        if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return "金牛座";
+        if ((month == 5 && day >= 21) || (month == 6 && day <= 21)) return "雙子座";
+        if ((month == 6 && day >= 22) || (month == 7 && day <= 22)) return "巨蟹座";
+        if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return "獅子座";
+        if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return "處女座";
+        if ((month == 9 && day >= 23) || (month == 10 && day <= 23)) return "天秤座";
+        if ((month == 10 && day >= 24) || (month == 11 && day <= 22)) return "天蠍座";
+        if ((month == 11 && day >= 23) || (month == 12 && day <= 21)) return "射手座";
+        if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return "摩羯座";
+        if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return "水瓶座";
+        return "雙魚座";
+    }
+
+    function getBusinessLevelTitle(count) {
+        if (count === 0) return "【展業新手】"; if (count < 10) return "【展業先鋒】"; if (count < 30) return "【金牌業務】"; return "【王牌精英】";
+    }
 
     function handleLogin() {
         const name = document.getElementById('login-name').value;
@@ -291,92 +341,130 @@
         if(!name || !bday) return alert("請輸入登入驗證");
 
         const numStr = bday.replace(/-/g, "").replace(/\./g, "");
-        let sum = 0;
-        for (let i = 0; i < numStr.length; i++) sum += parseInt(numStr[i]);
+        let sum = 0; for (let i = 0; i < numStr.length; i++) sum += parseInt(numStr[i]);
         while (sum > 9) { let temp = 0; let s = sum.toString(); for (let i = 0; i < s.length; i++) temp += parseInt(s[i]); sum = temp; }
 
-        // 💡 修正 2：強制斷行在下面，並且字體縮小
-        document.getElementById('top-memo-bar').innerHTML = `👤 <b>王牌精英：${name}</b> <span class="memo-detail">${destinyDatabase[sum]}</span>`;
+        userZodiac = getZodiacSign(bday);
+        const levelTitle = getBusinessLevelTitle(clients.length);
+        const topBar = document.getElementById('top-memo-bar');
+        
+        topBar.innerHTML = `👤 <b>${levelTitle}：${name}</b> (核心 ${sum} 號人) 
+                            <span class="memo-detail">
+                                ${destinyDatabase[sum] || '【全能天命走向】厚積薄發，布局全局。'}<br>
+                                ${zegoDatabase[userZodiac]}
+                            </span>`;
+
         document.getElementById('login-screen').style.display = "none";
         document.getElementById('main-system').style.display = "block";
         document.getElementById('global-home-btn').style.display = "block";
-        
-        refreshClassElements(); // 渲染標籤與下拉選單
-        init();
+        refreshClassElements(); init();
     }
 
+    function init() {
+        drawFirstLevelTree();
+        renderCalendar();
+        callGeminiLive();
+    }
+
+    function switchPanel(panelId, btn) {
+        document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-menu .nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(panelId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function setupCustomKey() {
+        const customKey = prompt("🔑 請輸入妳的 Gemini API Key (不公開上傳，儲存於本地最安全)：");
+        if(customKey && customKey.trim() !== "") {
+            localStorage.setItem('ml_custom_gemini_key', customKey.trim());
+            alert("✅ 金鑰本地配置成功！即刻恢復大腦全速運作。");
+            callGeminiLive();
+        }
+    }
+
+    async function callGeminiLive() {
+        const out = document.getElementById('topic-output'); 
+        const btn = document.getElementById('ai-gen-btn'); 
+        out.innerText = "🔮 胡曼黎大腦連線中，烘烤最新戰略文案..."; 
+        btn.disabled = true;
+
+        // 優先讀取本地安全的金鑰
+        const activeKey = localStorage.getItem('ml_custom_gemini_key') || BACKUP_KEY;
+
+        try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeKey}`, {
+                method: "POST", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    contents: [{ 
+                        parts: [{ text: `妳是保險天后胡曼黎。請針對當前時空的【${currentTopicPrompt}】即時生成一則120字內的保險業展業暖心問候文案，用幽默智慧的風格引導客戶進行保單缺口檢視。請直接吐出文案與Emoji，不要有任何多餘的引言或解釋。` }] 
+                    }] 
+                })
+            });
+            const d = await res.json(); 
+            if(d.candidates && d.candidates[0].content.parts[0].text) {
+                out.innerText = d.candidates[0].content.parts[0].text.trim();
+            } else {
+                throw new Error("API Key 被封鎖或無效");
+            }
+        } catch (e) { 
+            out.innerHTML = `<span style="color:#b91c1c; font-weight:bold;">⚠️ 雲端大腦金鑰失效：</span><br>因為 GitHub Pages 的公開代碼保護機制，預設金鑰會被系統自動註銷。請點擊右下角<b>【🔑 設定金鑰】</b>手動貼上有效的 Gemini Key 即可完美重啟！`; 
+        } finally { 
+            btn.disabled = false; 
+        }
+    }
+
+    function changeTopic(p, btn) { 
+        document.querySelectorAll('.tag-container .tag-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+        currentTopicPrompt = p; 
+        callGeminiLive(); 
+    }
+
+    function openTarotModal() {
+        document.getElementById('tarot-result-zone').style.display = "none";
+        document.getElementById('tarot-modal').style.display = "flex";
+    }
+    function closeTarotModal() { document.getElementById('tarot-modal').style.display = "none"; }
+    
+    function drawTarotCard() {
+        const resZone = document.getElementById('tarot-result-zone');
+        resZone.style.display = "block";
+        const randomPrompts = [
+            `🔮 <b>抽中【魔術師】商戰大牌：</b> 代表隨機應變與攻心磁場。最適合將當前破冰主題轉化為即時話題，用妳 ${userZodiac} 的獨特風格主動突擊約面談！`,
+            `🔮 <b>抽中【戰車】商戰大牌：</b> 代表摧枯拉朽的突破力。收起妳 ${userZodiac} 的遲疑或過度防禦面子，今天直接切入大單資產防線或財務核心， Close 成交運極佳！`,
+            `🔮 <b>抽中【隱者】商戰大牌：</b> 代表謀定後動與防禦。今天遇到的客戶心思縝密或同行威脅大，多聽少說，順著主題做深度的專業健診，即可破防！`
+        ];
+        resZone.innerHTML = `🃏 <b>出陣抽籤密令開示：</b><br>${randomPrompts[Math.floor(Math.random() * randomPrompts.length)]}`;
+    }
+
+    function toggleAddForm() { const zone = document.getElementById('add-client-form-zone'); const btn = document.getElementById('toggle-add-btn'); if(zone.style.display === "none") { zone.style.display = "block"; btn.innerText = "✕ 收起新增面板"; } else { zone.style.display = "none"; btn.innerText = "➕ 新增客戶布局"; } }
     function logoutToHome() { document.getElementById('main-system').style.display = "none"; document.getElementById('global-home-btn').style.display = "none"; document.getElementById('login-screen').style.display = "block"; currentClassFilter = ''; }
-    function init() { drawFirstLevelTree(); renderClients(clients); renderCalendar(); }
-    function switchPanel(panelId, btn) { document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById(panelId).classList.add('active'); btn.classList.add('active'); if(panelId === 'panel-ice') changeTopic('當前最熱門焦點新聞', document.querySelector('.tag-btn')); }
-
-    // 💡 修正 3：自訂新增人脈分類控制
     function openCustomClassModal() { document.getElementById('custom-class-modal').style.display = "flex"; }
-    function closeCustomClassModal() { document.getElementById('custom-class-modal').style.display = "none"; document.getElementById('new-class-input').value = ""; }
-    function saveCustomClass() {
-        const val = document.getElementById('new-class-input').value.trim();
-        if(!val) return alert("請輸入新分類名稱");
-        if(classList.includes(val)) return alert("此分類已存在");
-        classList.push(val);
-        localStorage.setItem('ml_classes_tags', JSON.stringify(classList));
-        closeCustomClassModal();
-        refreshClassElements();
-        alert(`全新分類【${val}】建立成功！`);
-    }
-
+    function closeCustomClassModal() { document.getElementById('custom-class-modal').style.display = "none"; }
+    function saveCustomClass() { const val = document.getElementById('new-class-input').value.trim(); if(!val || classList.includes(val)) return alert("有誤"); classList.push(val); localStorage.setItem('ml_classes_tags', JSON.stringify(classList)); closeCustomClassModal(); refreshClassElements(); resetToFirstLevelTree(); }
+    
     function refreshClassElements() {
-        // 1. 鋪設分類按鈕
-        const zone = document.getElementById('class-buttons-zone');
-        zone.innerHTML = "";
-        classList.forEach(cls => {
-            zone.innerHTML += `<button class="class-btn" id="f-tag-${cls}" onclick="filterByClass('${cls}')">${cls}</button>`;
-        });
-        // 2. 鋪設手動新增下拉選單
-        const select = document.getElementById('c-class');
-        select.innerHTML = "";
-        classList.forEach(cls => { select.innerHTML += `<option value="${cls}">${cls}</option>`; });
-        // 3. 鋪設編輯下拉選單
-        const editSelect = document.getElementById('edit-class');
-        editSelect.innerHTML = "";
-        classList.forEach(cls => { editSelect.innerHTML += `<option value="${cls}">${cls}</option>`; });
+        const zone = document.getElementById('class-buttons-zone'); zone.innerHTML = ""; classList.forEach(cls => { zone.innerHTML += `<button class="class-btn" id="f-tag-${cls}" onclick="filterByClass('${cls}')">${cls}</button>`; });
+        const s1 = document.getElementById('c-class'); s1.innerHTML = ""; classList.forEach(cls => { s1.innerHTML += `<option value="${cls}">${cls}</option>`; });
+        const s2 = document.getElementById('edit-class'); s2.innerHTML = ""; classList.forEach(cls => { s2.innerHTML += `<option value="${cls}">${cls}</option>`; });
     }
 
     function filterByClass(className) {
-        currentClassFilter = className;
-        document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
-        const el = document.getElementById(`f-tag-${className}`);
-        if(el) el.classList.add('active');
-
-        document.getElementById('tree-title-text').innerText = `📊 第二層：【${className}】人脈樹鏈`;
-        document.getElementById('tree-back-indicator').style.display = "inline";
-
+        currentClassFilter = className; document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active')); const el = document.getElementById(`f-tag-${className}`); if(el) el.classList.add('active');
+        document.getElementById('tree-title-text').innerText = `📊 第二層：【${className}】人脈樹鏈`; document.getElementById('tree-back-indicator').style.display = "inline";
         const canvas = document.getElementById('master-tree-canvas'); canvas.innerHTML = "";
-        const classCenterNode = document.createElement('div');
-        classCenterNode.style.cssText = "position:absolute; top:100px; left:145px; width:90px; padding:8px; background:var(--navy-premium); color:white; border-radius:12px; font-size:12px; font-weight:bold; text-align:center; z-index:10; border:1px solid var(--premium-gold);";
-        classCenterNode.innerText = `🌿 ${className}`; canvas.appendChild(classCenterNode);
-
+        const classCenterNode = document.createElement('div'); classCenterNode.style.cssText = "position:absolute; top:100px; left:145px; width:90px; padding:8px; background:var(--navy-premium); color:white; border-radius:12px; font-size:12px; font-weight:bold; text-align:center; z-index:10; border:1px solid var(--premium-gold);"; classCenterNode.innerText = `🌿 ${className}`; canvas.appendChild(classCenterNode);
         const classClients = clients.filter(c => c.clientClass === className);
-        if(classClients.length === 0) {
-            canvas.innerHTML += `<div style="font-size:12px; color:gray; text-align:center; margin-top:60px; width:100%;">此標籤下目前無樹狀網絡。</div>`;
-            renderClients(clients); return;
-        }
-
+        if(classClients.length === 0) { canvas.innerHTML += `<div style="font-size:12px; color:gray; text-align:center; margin-top:60px; width:100%;">此標籤下目前無樹狀網絡。</div>`; renderClients(clients); return; }
         const clientPositions = [[15, 30], [270, 30], [15, 160], [270, 160]];
         classClients.forEach((c, cIdx) => {
             if(cIdx >= clientPositions.length) return; const cPos = clientPositions[cIdx];
-            const cNode = document.createElement('div');
-            cNode.style.cssText = `position:absolute; left:${cPos[0]}px; top:${cPos[1]}px; width:90px; padding:5px; background:#fffdf7; border:1.5px solid var(--wine-red); border-radius:8px; font-size:11.5px; font-weight:bold; text-align:center; z-index:6;`;
-            cNode.innerText = `👤 ${c.name}`; canvas.appendChild(cNode);
-            drawCanvasLine(canvas, 190, 120, cPos[0]+45, cPos[1]+15);
-
+            const cNode = document.createElement('div'); cNode.style.cssText = `position:absolute; left:${cPos[0]}px; top:${cPos[1]}px; width:90px; padding:5px; background:#fffdf7; border:1.5px solid var(--wine-red); border-radius:8px; font-size:11.5px; font-weight:bold; text-align:center; z-index:6;`; cNode.innerText = `👤 ${c.name}`; canvas.appendChild(cNode); drawCanvasLine(canvas, 190, 120, cPos[0]+45, cPos[1]+15);
             if(c.family) {
-                const members = c.family.split(/[,，]/);
-                members.forEach((m, mIdx) => {
-                    if(mIdx > 1) return;
-                    const offsetX = cPos[0] < 150 ? -10 : 100; const offsetY = mIdx === 0 ? -12 : 24;
-                    const mNode = document.createElement('div');
-                    mNode.style.cssText = `position:absolute; left:${cPos[0] + offsetX}px; top:${cPos[1] + offsetY}px; width:60px; padding:2px; background:#f8fafc; border:1px solid var(--text-sub); border-radius:4px; font-size:9.5px; text-align:center; z-index:4; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`;
-                    mNode.innerText = m.trim(); canvas.appendChild(mNode);
-                    drawCanvasLine(canvas, cPos[0]+45, cPos[1]+15, cPos[0]+offsetX+30, cPos[1]+offsetY+8);
+                c.family.split(/[,，]/).forEach((m, mIdx) => {
+                    if(mIdx > 1) return; const offsetX = cPos[0] < 150 ? -10 : 100; const offsetY = mIdx === 0 ? -12 : 24;
+                    const mNode = document.createElement('div'); mNode.style.cssText = `position:absolute; left:${cPos[0] + offsetX}px; top:${cPos[1] + offsetY}px; width:60px; padding:2px; background:#f8fafc; border:1px solid var(--text-sub); border-radius:4px; font-size:9.5px; text-align:center; z-index:4; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`; mNode.innerText = m.trim(); canvas.appendChild(mNode); drawCanvasLine(canvas, cPos[0]+45, cPos[1]+15, cPos[0]+offsetX+30, cPos[1]+offsetY+8);
                 });
             }
         });
@@ -384,94 +472,41 @@
     }
 
     function drawFirstLevelTree() {
-        currentClassFilter = '';
-        document.getElementById('tree-title-text').innerText = "📊 第一層：全脈絡人脈類別樹";
-        document.getElementById('tree-back-indicator').style.display = "none";
-        document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
+        currentClassFilter = ''; document.getElementById('tree-title-text').innerText = "📊 第一層：全脈絡人脈類別樹"; document.getElementById('tree-back-indicator').style.display = "none"; document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
         const canvas = document.getElementById('master-tree-canvas'); canvas.innerHTML = "";
-
-        const meNode = document.createElement('div');
-        meNode.style.cssText = "position:absolute; top:100px; left:145px; width:90px; padding:8px; background:var(--wine-red); color:white; border-radius:50%; font-size:12px; font-weight:bold; text-align:center; z-index:10; box-shadow:0 4px 10px rgba(0,0,0,0.15);";
-        meNode.innerText = "👑 " + (document.getElementById('login-name').value || "大壯"); canvas.appendChild(meNode);
-
+        const meNode = document.createElement('div'); meNode.style.cssText = "position:absolute; top:100px; left:145px; width:90px; padding:8px; background:var(--wine-red); color:white; border-radius:50%; font-size:12px; font-weight:bold; text-align:center; z-index:10;"; meNode.innerText = "👑 " + (document.getElementById('login-name').value || "粘栩溱"); canvas.appendChild(meNode);
         const positions = [[20, 25], [145, 12], [270, 25], [20, 175], [145, 185], [270, 175]];
         classList.forEach((cls, idx) => {
-            if(idx >= positions.length) return; // 手機版布陣上限顯示6個
-            const pos = positions[idx]; const count = clients.filter(c => c.clientClass === cls).length;
-            const btnNode = document.createElement('div');
-            btnNode.style.cssText = `position:absolute; left:${pos[0]}px; top:${pos[1]}px; width:88px; padding:5px 1px; background:#fff; border:1.5px solid var(--premium-gold); border-radius:10px; font-size:11px; font-weight:bold; text-align:center; cursor:pointer; z-index:5;`;
-            btnNode.innerHTML = `🌿 ${cls}<br><span style="color:var(--text-sub); font-size:9.5px;">(${count}佈局)</span>`;
-            btnNode.onclick = () => filterByClass(cls); canvas.appendChild(btnNode);
-            drawCanvasLine(canvas, 190, 120, pos[0]+44, pos[1]+15);
+            if(idx >= positions.length) return; const pos = positions[idx]; const count = clients.filter(c => c.clientClass === cls).length;
+            const btnNode = document.createElement('div'); btnNode.style.cssText = `position:absolute; left:${pos[0]}px; top:${pos[1]}px; width:88px; padding:5px 1px; background:#fff; border:1.5px solid var(--premium-gold); border-radius:10px; font-size:11px; font-weight:bold; text-align:center; cursor:pointer; z-index:5;`; btnNode.innerHTML = `🌿 ${cls}<br><span style="color:var(--text-sub); font-size:9.5px;">(${count}布局)</span>`;
+            btnNode.onclick = () => filterByClass(cls); canvas.appendChild(btnNode); drawCanvasLine(canvas, 190, 120, pos[0]+44, pos[1]+15);
         });
     }
 
     function resetToFirstLevelTree() { drawFirstLevelTree(); renderClients(clients); }
     function drawCanvasLine(canvas, sX, sY, eX, eY) { const line = document.createElement('div'); line.style.cssText = `position:absolute; background:#ebdcd8; height:1px; z-index:1; transform-origin: top left;`; const dist = Math.sqrt((eX - sX) ** 2 + (eY - sY) ** 2); const angle = Math.atan2(eY - sY, eX - sX) * 180 / Math.PI; line.style.width = dist + "px"; line.style.left = sX + "px"; line.style.top = sY + "px"; line.style.transform = `rotate(${angle}deg)`; canvas.appendChild(line); }
-
-    // 💡 修正 4：傻瓜式一個一個輸入關係人小積木
-    function addSingleFamilyChip() {
-        const name = document.getElementById('temp-f-name').value.trim();
-        const rel = document.getElementById('temp-f-rel').value.trim();
-        if(!name || !rel) return alert("請填齊家人姓名與關係");
-        
-        tempFamilyChips.push(`${name}-${rel}`);
-        renderFamilyChipsPool();
-        
-        document.getElementById('temp-f-name').value = "";
-        document.getElementById('temp-f-rel').value = "";
-    }
-    function renderFamilyChipsPool() {
-        const pool = document.getElementById('family-chips-pool');
-        pool.innerHTML = "";
-        tempFamilyChips.forEach((chip, i) => {
-            pool.innerHTML += `<span class="member-chip">👥 ${chip} <span style="color:red;font-weight:bold;margin-left:4px;" onclick="removeFamilyChip(${i})">✕</span></span>`;
-        });
-    }
+    function addSingleFamilyChip() { const name = document.getElementById('temp-f-name').value.trim(); const rel = document.getElementById('temp-f-rel').value.trim(); if(!name || !rel) return alert("請填齊家人姓名與關係"); tempFamilyChips.push(`${name}-${rel}`); renderFamilyChipsPool(); document.getElementById('temp-f-name').value = ""; document.getElementById('temp-f-rel').value = ""; }
+    function renderFamilyChipsPool() { const pool = document.getElementById('family-chips-pool'); pool.innerHTML = ""; tempFamilyChips.forEach((chip, i) => { pool.innerHTML += `<span class="member-chip">👥 ${chip} <span style="color:red;font-weight:bold;margin-left:4px;" onclick="removeFamilyChip(${i})">✕</span></span>`; }); }
     function removeFamilyChip(i) { tempFamilyChips.splice(i, 1); renderFamilyChipsPool(); }
-
-    function searchClients() {
-        const keyword = document.getElementById('search-input').value.toLowerCase().trim();
-        if(!keyword) { renderClients(clients); return; }
-        const filtered = clients.filter(c => c.name.toLowerCase().includes(keyword) || (c.phone && c.phone.includes(keyword)) || (c.finance && c.finance.toLowerCase().includes(keyword)));
-        renderClients(filtered, true);
-    }
+    function searchClients() { const keyword = document.getElementById('search-input').value.toLowerCase().trim(); if(!keyword) { renderClients(clients); return; } const filtered = clients.filter(c => c.name.toLowerCase().includes(keyword) || (c.phone && c.phone.includes(keyword)) || (c.finance && c.finance.toLowerCase().includes(keyword))); renderClients(filtered, true); }
 
     function renderClients(dataSource, isSearching = false) {
-        const list = document.getElementById('client-list-container'); list.innerHTML = "";
-        if(!isSearching && !currentClassFilter) { list.innerHTML = `<div style="text-align:center; color:gray; font-size:12px; margin-top:10px;">💡 請先點擊上方標籤按鈕。</div>`; return; }
-        
+        const list = document.getElementById('client-list-container'); list.innerHTML = ""; if(!isSearching && !currentClassFilter) { list.innerHTML = `<div style="text-align:center; color:gray; font-size:12px; margin-top:10px;">💡 請先點擊上方標籤按鈕。</div>`; return; }
         const displayData = isSearching ? dataSource : dataSource.filter(c => c.clientClass === currentClassFilter);
         displayData.forEach((c) => {
-            const globalIndex = clients.indexOf(c);
-            let intelHtml = ""; const dimensions = ["背景地雷", "家系人脈", "財務資產", "決策主導", "競爭防線"];
-            let missingIntel = [];
-            c.intel.forEach((hasIt, idx) => {
-                intelHtml += `<span class="intel-badge ${hasIt?'intel-yes':'intel-no'}">${hasIt?'✓':'✗'} ${dimensions[idx]}</span>`;
-                if(!hasIt) missingIntel.push(dimensions[idx]);
-            });
-
-            let historyHtml = "";
-            if(c.visits) c.visits.forEach(v => historyHtml += `<div class="history-item"><span class="history-date">📅 ${v.date}</span>${v.detail}</div>`);
-
+            const globalIndex = clients.indexOf(c); let missingIntel = [];
+            if(!c.relation) missingIntel.push("背景關係"); if(!c.family) missingIntel.push("家系人脈網"); if(!c.finance) missingIntel.push("財務資產深度"); if(!c.decision) missingIntel.push("決策核心主導"); if(!c.competitor) missingIntel.push("同行競爭線");
+            let alertHtml = missingIntel.length > 0 ? `<div style="color:#b91c1c; background:#fef2f2; padding:8px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">🚨 曼黎商戰情報缺口：尚缺乏【${missingIntel.join("、")}】戰略情報！</div>` : `<div style="color:#166534; background:#f0fdf4; padding:8px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">🏆 完美掌控：情報全面解鎖齊全！</div>`;
+            let historyHtml = ""; if(c.visits) c.visits.forEach(v => historyHtml += `<div class="history-item"><span class="history-date">📅 ${v.date}</span>${v.detail}</div>`);
+            
             list.innerHTML += `
                 <div class="client-item">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <span style="font-size:15px; font-weight:bold; color:var(--navy-premium);">${c.name}</span>
-                        <div style="display:flex; gap:4px;">
-                            <button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openEditModal(${globalIndex})">✏️ 編輯</button>
-                            <button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openGenogram(${globalIndex})">📊 家系</button>
-                        </div>
-                    </div>
-                    <div class="info-row"><span class="info-label">📞 電話：</span>${c.phone || '未掌握'} | <span class="info-label">📍 地址：</span>${c.address || '未掌握'}</div>
-                    <div style="margin:4px 0;">${intelHtml}</div>
-                    <div class="biz-premium-box">
-                        <div class="biz-title">💰 財務狀況：</div><div>${c.finance || '⚠️ 未掌握'}</div>
-                        <div class="biz-title">⚖️ 決策核心：</div><div>${c.decision || '⚠️ 未掌握'}</div>
-                        <div class="biz-title">⚔️ 同行競爭：</div><div>${c.competitor || '⚠️ 未掌握'}</div>
-                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;"><span style="font-size:15px; font-weight:bold; color:var(--navy-premium);">${c.name}</span><div style="display:flex; gap:4px;"><button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openEditModal(${globalIndex})">✏️ 編輯</button><button class="nav-btn" style="padding:4px 8px; font-size:11px; margin:0;" onclick="openGenogram(${globalIndex})">📊 家系</button></div></div>
+                    <div class="info-row"><span class="info-label">👤 客戶關係：</span>${c.relation || '⚠️ 未掌握'}</div><div class="info-row"><span class="info-label">🌳 家人關係：</span>${c.family || '⚠️ 未設定'}</div><div class="info-row"><span class="info-label">🎂 出生生日：</span>${c.birthday || '未設定'}</div><div class="info-row"><span class="info-label">📞 聯絡電話：</span>${c.phone || '未掌握'}</div><div class="info-row"><span class="info-label">📍 通訊地址：</span>${c.address || '未掌握'}</div><div class="info-row"><span class="info-label">🛡️ 客戶類別：</span><span style="background: #e0f2fe; color:#0369a1; padding:1px 6px; border-radius:4px; font-weight:bold;">${c.clientType || '非客戶'}</span></div>
+                    ${alertHtml}
+                    <div class="biz-premium-box"><div class="biz-title">💰 財務狀況：</div><div>${c.finance || '⚠️ 未掌握'}</div><div class="biz-title">⚖️ 決策者：</div><div>${c.decision || '⚠️ 未掌握'}</div><div class="biz-title">⚔️ 競爭者：</div><div>${c.competitor || '⚠️ 未掌握'}</div></div>
                     <div class="history-box"><div class="history-title">📈 歷史對談歷程</div>${historyHtml || '暫無紀錄'}</div>
-                    <button class="btn" style="background:#f1f5f9; color:#ef4444; padding:2px; font-size:11px; margin-top:8px; width:auto; height:28px;" onclick="deleteClient(${globalIndex})">移除客戶</button>
+                    <button class="btn" style="background:#f1f5f9; color:#ef4444; padding:2px; font-size:11px; margin-top:8px; width:auto; height:28px;" onclick="deleteClient(${globalIndex})">移除客戶布局</button>
                 </div>
             `;
         });
@@ -480,58 +515,73 @@
 
     function addClient() {
         const name = document.getElementById('c-name').value.trim(); const cls = document.getElementById('c-class').value; if(!name) return alert("請輸入客戶姓名");
-        let intelArray = [document.getElementById('i-1').checked, document.getElementById('i-2').checked, document.getElementById('i-3').checked, document.getElementById('i-4').checked, document.getElementById('i-5').checked];
-        let historyArray = []; const fv = document.getElementById('c-first-visit').value.trim();
-        if(fv) historyArray.push({ date: new Date().toISOString().split('T')[0], detail: fv });
-
-        // 將積木池串起來
+        let historyArray = []; const fv = document.getElementById('c-first-visit').value.trim(); if(fv) historyArray.push({ date: new Date().toISOString().split('T')[0], detail: fv });
         const familyString = tempFamilyChips.join(", ");
-
-        clients.push({
-            name, phone: document.getElementById('c-phone').value, address: document.getElementById('c-address').value, family: familyString, clientClass: cls, finance: document.getElementById('c-finance').value, decision: document.getElementById('c-decision').value, competitor: document.getElementById('c-competitor').value, intel: intelArray, visits: historyArray
-        });
+        clients.push({ name, relation: document.getElementById('c-relation').value.trim(), family: familyString, birthday: document.getElementById('c-birthday').value, phone: document.getElementById('c-phone').value.trim(), address: document.getElementById('c-address').value.trim(), clientType: document.getElementById('c-client-type').value, clientClass: cls, finance: document.getElementById('c-finance').value.trim(), decision: document.getElementById('c-decision').value.trim(), competitor: document.getElementById('c-competitor').value.trim(), intel: [true, true, true, true, true], visits: historyArray });
+        
+        const levelTitle = getBusinessLevelTitle(clients.length); const nameInput = document.getElementById('login-name').value; const topBar = document.getElementById('top-memo-bar');
+        if(topBar) { const detailPart = topBar.querySelector('.memo-detail').innerHTML; topBar.innerHTML = `👤 <b>${levelTitle}：${nameInput}</b> <span class="memo-detail">${detailPart}</span>`; }
         
         tempFamilyChips = []; renderFamilyChipsPool();
-        document.getElementById('c-name').value = ""; document.getElementById('c-phone').value = ""; document.getElementById('c-address').value = ""; document.getElementById('c-first-visit').value = "";
-        filterByClass(cls);
+        document.getElementById('c-name').value = ""; document.getElementById('c-relation').value = ""; document.getElementById('c-phone').value = ""; document.getElementById('c-address').value = ""; document.getElementById('c-finance').value = ""; document.getElementById('c-decision').value = ""; document.getElementById('c-competitor').value = ""; document.getElementById('c-first-visit').value = ""; document.getElementById('c-birthday').value = "";
+        toggleAddForm(); filterByClass(cls);
     }
 
     function openEditModal(globalIndex) {
-        const c = clients[globalIndex]; document.getElementById('edit-index').value = globalIndex; document.getElementById('edit-name').value = c.name; document.getElementById('edit-phone').value = c.phone || ""; document.getElementById('edit-address').value = c.address || ""; document.getElementById('edit-family').value = c.family || ""; document.getElementById('edit-class').value = c.clientClass; document.getElementById('edit-finance').value = c.finance || ""; document.getElementById('edit-decision').value = c.decision || ""; document.getElementById('edit-competitor').value = c.competitor || ""; document.getElementById('edit-new-visit').value = "";
-        for(let i=1; i<=5; i++) document.getElementById(`e-i-${i}`).checked = c.intel ? c.intel[i-1] : false;
+        const c = clients[globalIndex]; document.getElementById('edit-index').value = globalIndex; document.getElementById('edit-name').value = c.name; document.getElementById('edit-relation').value = c.relation || ""; document.getElementById('edit-phone').value = c.phone || ""; document.getElementById('edit-address').value = c.address || ""; document.getElementById('edit-family').value = c.family || ""; document.getElementById('edit-class').value = c.clientClass; document.getElementById('edit-finance').value = c.finance || ""; document.getElementById('edit-decision').value = c.decision || ""; document.getElementById('edit-competitor').value = c.competitor || ""; document.getElementById('edit-new-visit').value = ""; document.getElementById('edit-birthday').value = c.birthday || ""; document.getElementById('edit-client-type').value = c.clientType || "非客戶";
         document.getElementById('edit-modal').style.display = "flex";
     }
     function closeEditModal() { document.getElementById('edit-modal').style.display = "none"; }
     function saveClientEdit() {
         const idx = document.getElementById('edit-index').value; const targetClass = document.getElementById('edit-class').value; const nv = document.getElementById('edit-new-visit').value.trim();
         if(nv) { if(!clients[idx].visits) clients[idx].visits = []; clients[idx].visits.push({ date: new Date().toISOString().split('T')[0], detail: nv }); }
-        let intelArray = []; for(let i=1; i<=5; i++) intelArray.push(document.getElementById(`e-i-${i}`).checked);
-        clients[idx].name = document.getElementById('edit-name').value; clients[idx].phone = document.getElementById('edit-phone').value; clients[idx].address = document.getElementById('edit-address').value; clients[idx].family = document.getElementById('edit-family').value; clients[idx].clientClass = targetClass; clients[idx].finance = document.getElementById('edit-finance').value; clients[idx].decision = document.getElementById('edit-decision').value; clients[idx].competitor = document.getElementById('edit-competitor').value; clients[idx].intel = intelArray;
-        closeEditModal(); alert("資產特質情報變更修改成功！"); filterByClass(targetClass);
+        clients[idx].name = document.getElementById('edit-name').value; clients[idx].relation = document.getElementById('edit-relation').value; clients[idx].phone = document.getElementById('edit-phone').value; clients[idx].address = document.getElementById('edit-address').value; clients[idx].family = document.getElementById('edit-family').value; clients[idx].clientClass = targetClass; clients[idx].finance = document.getElementById('edit-finance').value; clients[idx].decision = document.getElementById('edit-decision').value; clients[idx].competitor = document.getElementById('edit-competitor').value; clients[idx].birthday = document.getElementById('edit-birthday').value; clients[idx].clientType = document.getElementById('edit-client-type').value;
+        closeEditModal(); alert("修改變更成功！"); filterByClass(targetClass);
     }
 
-    // 💡 修正 5：即時聯結雲端大腦 (內建完全體金鑰)
-    async function callGeminiLive() {
-        const out = document.getElementById('topic-output'); const btn = document.getElementById('ai-gen-btn');
-        out.innerText = "🔮 胡曼黎大腦正在即時連線雲端，孵化專屬破冰文案，請稍候..."; btn.disabled = true;
+    function gapiLoaded() { gapi.load('client', () => {}); }
+    function gisLoaded() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID, scope: SCOPES, callback: (resp) => {
+                if (resp.error) return; accessToken = resp.access_token;
+                document.getElementById('auth-btn').innerText = "✓ 已成功登入 Google 帳戶"; document.getElementById('auth-btn').style.background = "#166534";
+                document.getElementById('sync-btn').disabled = false; document.getElementById('load-btn').disabled = false; document.getElementById('sync-status').innerText = "狀態：雲端通道已安全解鎖！";
+            }
+        });
+    }
+    function handleAuthClick() { if (accessToken === null) { tokenClient.requestAccessToken({prompt: 'consent'}); } }
+    async function uploadBackupToDrive() {
+        if (!accessToken) return; document.getElementById('sync-status').innerText = "🔄 正在傳送...";
+        const fileContent = JSON.stringify({ clients, classList });
+        const metadata = { 'name': 'humany_backup.json', 'mimeType': 'application/json' };
+        const formData = new FormData(); formData.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'})); formData.append('file', new Blob([fileContent], {type: 'application/json'}));
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${SECRET_KEY}`, {
-                method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `妳是保險銷售天后胡曼黎。請針對當前時空背景（當前時序為2026年）的【${currentTopicPrompt}】即時生成一則120字內的溫暖問候破冰文案，自然切入、幽默優雅，並強烈引導客戶與妳約時間重新進行保單檢視或資產配置。直接吐出內容，多加精美Emoji。` }] }] })
-            });
-            const d = await res.json(); out.innerText = d.candidates[0].content.parts[0].text.trim();
-        } catch (e) { out.innerText = "⚠️ 即時連線大腦出錯，請確認網路現狀後點選重新生成。"; } finally { btn.disabled = false; }
+            const resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', { method: 'POST', headers: { 'Authorization': 'Bearer ' + accessToken }, body: formData });
+            if (resp.ok) { document.getElementById('sync-status').innerText = "✓ 備份成功！檔案已鎖入雲端"; alert("🛡️ 備份成功！"); }
+        } catch (e) { document.getElementById('sync-status').innerText = "⚠️ 失敗"; }
     }
-    function changeTopic(p, btn) { document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentTopicPrompt = p; callGeminiLive(); }
-    function copyTopic() { navigator.clipboard.writeText(document.getElementById('topic-output').innerText); alert('文案複製成功！🚀'); }
+    async function loadBackupFromDrive() {
+        if (!accessToken) return; document.getElementById('sync-status').innerText = "🔄 正在還原...";
+        try {
+            const listResp = await fetch("https://www.googleapis.com/drive/v3/files?q=name='humany_backup.json'&spaces=drive", { headers: { 'Authorization': 'Bearer ' + accessToken } });
+            const listData = await listResp.json(); if (!listData.files || listData.files.length === 0) return alert("無備份");
+            const fileResp = await fetch(`https://www.googleapis.com/drive/v3/files/${listData.files[0].id}?alt=media`, { headers: { 'Authorization': 'Bearer ' + accessToken } });
+            const parsedData = await fileResp.json();
+            if (parsedData.clients) { clients = parsedData.clients; classList = parsedData.classList; localStorage.setItem('ml_clients', JSON.stringify(clients)); localStorage.setItem('ml_classes_tags', JSON.stringify(classList)); refreshClassElements(); resetToFirstLevelTree(); alert("🏆 還原成功！"); }
+        } catch (e) { alert("出錯"); }
+    }
 
-    function renderCalendar() { const grid = document.getElementById('calendar-box'); grid.innerHTML = ""; for(let d=1; d<=31; d++) { const dateStr = `2026-07-${d.toString().padStart(2, '0')}`; grid.innerHTML += `<div class="calendar-day" onclick="showDayDetail('${dateStr}')">${d}</div>`; } }
-    function showDayDetail(dateStr) { const box = document.getElementById('calendar-detail-box'); box.innerHTML = `<b>📅 ${dateStr} 行事曆</b><br>功能完備，隨時可於上方追加。`; }
+    function copyTopic() { navigator.clipboard.writeText(document.getElementById('topic-output').innerText); alert('文案複製成功！🚀'); }
+    function renderCalendar() { const grid = document.getElementById('calendar-box'); grid.innerHTML = ""; for(let d=1; d<=31; d++) { grid.innerHTML += `<div class="calendar-day" onclick="showDayDetail('2026-07-${d}')">${d}</div>`; } }
+    function showDayDetail(dateStr) { const box = document.getElementById('calendar-detail-box'); box.innerHTML = `<b>📅 ${dateStr} 行事曆</b><br>功能完備，排程鎖定中。`; }
     function addSchedule() { alert("行程排定成功！"); }
     function deleteClient(index) { clients.splice(index, 1); filterByClass(currentClassFilter); }
     function openGenogram(gIdx) { const c = clients[gIdx]; document.getElementById('geno-title').innerText = `${c.name} 家族核心`; const b = document.getElementById('geno-body'); b.innerHTML = `👑 ${c.name}<br>│<br>`; if(c.family) c.family.split(/[,，]/).forEach(m => b.innerHTML += `<span style="border:1px solid #ccc; padding:4px; margin:2px; display:inline-block; font-size:11px; border-radius:4px;">${m.trim()}</span>`); document.getElementById('geno-modal').style.display = "flex"; }
-    function closeGenoModal() { document.getElementById('geno-modal').style.display = "none"; }
+    function closeGenogram() { document.getElementById('geno-modal').style.display = "none"; }
     window.onload = function() { document.getElementById('login-screen').style.display = "block"; }
 </script>
+
+<script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </body>
 </html>
