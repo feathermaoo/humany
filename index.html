@@ -3,74 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>胡曼黎全能手冊</title>
+    <title>胡曼黎全能手冊 — 精緻版</title>
     <style>
         :root {
-            --bg-color: #fbf7f4;
-            --card-bg: #ffffff;
-            --primary: #e88d8d;
-            --primary-hover: #df7373;
-            --text-main: #4a3e3d;
-            --text-sub: #8c7b79;
-            --border-dash: #ebdcd8;
+            --bg-gradient: linear-gradient(135deg, #1a1515 0%, #2c1e1e 100%);
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --gold-primary: #d4af37;
+            --gold-dark: #aa8416;
+            --wine-red: #722f37;
+            --text-main: #2c2523;
+            --text-sub: #786e6c;
+            --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         body {
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'PingFang TC', 'Noto Sans TC', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .phone-container {
             width: 100%;
-            max-width: 412px;
+            max-width: 390px;
             background: var(--card-bg);
-            border: 4px solid var(--text-main);
-            border-radius: 32px;
-            padding: 24px;
-            box-shadow: 8px 8px 0px var(--text-main);
+            border-radius: 40px;
+            padding: 30px 24px;
+            box-shadow: var(--shadow-premium);
             box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         header {
             text-align: center;
-            border-bottom: 3px dashed var(--border-dash);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 28px;
+            position: relative;
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 26px;
+            font-weight: 600;
             margin: 0;
             color: var(--text-main);
-            letter-spacing: 1px;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #4a3728 0%, #1a1008 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            font-size: 13px;
-            color: var(--text-sub);
-            margin-top: 5px;
+            font-size: 11px;
+            color: var(--gold-dark);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
-        /* 模組 4：每日能量與底氣 */
+        /* 模組 4：每日能量與底氣（高級卡片風格） */
         .energy-section {
-            background: #fff9f9;
-            border: 2px solid var(--text-main);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 24px;
-            box-shadow: 4px 4px 0px var(--text-main);
+            background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.05);
+            position: relative;
         }
 
         .energy-title {
-            font-weight: bold;
-            font-size: 14px;
-            color: var(--primary);
-            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--wine-red);
+            margin-bottom: 14px;
+            letter-spacing: 1px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -79,95 +90,127 @@
         .refresh-btn {
             background: none;
             border: none;
-            font-size: 12px;
-            color: var(--text-sub);
+            font-size: 11px;
+            color: var(--gold-dark);
             cursor: pointer;
-            text-decoration: underline;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            padding: 0;
+        }
+        
+        .refresh-btn:hover {
+            color: var(--wine-red);
         }
 
         .compass-box {
-            font-size: 15px;
-            margin-bottom: 8px;
-            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+        
+        .compass-badge {
+            background: #f4ebe8;
+            color: var(--wine-red);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 6px;
         }
 
         .gold-quote {
-            font-size: 15px;
-            line-height: 1.5;
-            font-style: italic;
+            font-size: 14px;
+            line-height: 1.6;
             color: var(--text-main);
-            border-left: 4px solid var(--primary);
-            padding-left: 10px;
-            margin: 5px 0;
+            border-left: 3px solid var(--gold-primary);
+            padding-left: 14px;
+            margin: 10px 0 5px 0;
+            font-weight: 400;
         }
 
-        /* 模組 3：破冰話題產生器 */
+        /* 模組 3：破冰話題產生器（法式優雅標籤） */
         .topic-section {
-            border-top: 2px dashed var(--border-dash);
-            padding-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 24px;
         }
 
         .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            letter-spacing: 1px;
         }
 
         .tag-container {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .tag-btn {
-            background: #f0f0f0;
-            border: 2px solid var(--text-main);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 13px;
+            background: #f7f7f7;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-sub);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .tag-btn:hover {
+            background: #f0f0f0;
+            color: var(--text-main);
         }
 
         .tag-btn.active {
-            background: var(--primary);
+            background: var(--wine-red);
             color: white;
-            box-shadow: 2px 2px 0px var(--text-main);
+            border-color: var(--wine-red);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.2);
         }
 
         .output-box {
-            background: #fafafa;
-            border: 2px solid var(--text-main);
-            border-radius: 16px;
-            padding: 16px;
-            min-height: 100px;
+            background: #fbfbfc;
+            border: 1px solid #e8e8e8;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 120px;
             position: relative;
-            box-shadow: inset 2px 2px 5px rgba0,0,0,0.05;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .output-content {
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: var(--text-main);
             white-space: pre-wrap;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
         }
 
         .copy-btn {
             position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: var(--text-main);
+            bottom: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #d4af37 0%, #aa8416 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 5px 12px;
-            font-size: 12px;
+            border-radius: 12px;
+            padding: 7px 16px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(170, 132, 22, 0.2);
+            transition: all 0.3s;
         }
 
         .copy-btn:hover {
-            background: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(170, 132, 22, 0.3);
         }
     </style>
 </head>
@@ -176,16 +219,16 @@
 <div class="phone-container">
     <header>
         <h1>胡曼黎 全能手冊</h1>
-        <div class="subtitle">金牌保險業務的逆襲與自我修煉</div>
+        <div class="subtitle">La Vie Est Belle</div>
     </header>
 
     <!-- 模組 4：每日能量與底氣 -->
     <div class="energy-section">
         <div class="energy-title">
             <span>🛡️ 拜訪前的心理防護罩</span>
-            <button class="refresh-btn" onclick="refreshEnergy()">刷新能量</button>
+            <button class="refresh-btn" onclick="refreshEnergy()">REVIVE 刷新能量</button>
         </div>
-        <div class="compass-box">🧭 今日幸運方位：<span id="compass-text" style="color: #df7373;">正東方</span></div>
+        <div class="compass-box">🧭 今日幸運方位 <span class="compass-badge" id="compass-text">正東方</span></div>
         <div class="gold-quote" id="quote-text">「女性最大的保險，是經營好自己。今天不開單，明天吃路邊攤。打起精神出門！」</div>
     </div>
 
@@ -200,16 +243,15 @@
             <button class="tag-btn" onclick="generateTopic('finance', this)">📈 財經熱門</button>
         </div>
         <div class="output-box">
-            <div class="output-content" id="output-text">最近看新聞發現高通膨時代大家都在討論怎麼抗通膨，突然想到妳，最近工作還順利嗎？找時間一起喝杯咖啡，跟妳分享幾個實用的理財防禦小撇步呀！</div>
+            <div class="output-content" id="output-text">最近看新聞發現高通膨時代大家都在討論怎麼抗通膨，突然想到妳，最近工作還順利嗎？找時間一起喝杯咖啡，跟妳分享幾個實用的理財防禦小撇步呀！☕️</div>
             <button class="copy-btn" onclick="copyText()">一鍵複製</button>
         </div>
     </div>
 </div>
 
 <script>
-    // 曼黎金句庫
     const quotes = [
-        "「女性最大的保險，是經營好自己。今天不開單，明天吃路變攤。打起精神出門！」",
+        "「女性最大的保險，是經營好自己。今天不開單，明天吃路邊攤。打起精神出門！」",
         "「客戶拒絕妳不是討厭妳，是討厭不夠專業的妳。今天給我把專業拿出來，出陣！」",
         "「人情世故就是妳的財富。把客戶當家人照顧，業績自然會開花結果！」",
         "「與其等待機會，不如自己去敲門。曼黎字典裡，從來沒有放棄這兩個字！」",
@@ -218,16 +260,14 @@
 
     const compasses = ["正東方（貴人相助）", "正南方（簽約大吉）", "西北方（破冰順利）", "東北方（財運亨通）", "正西方（思緒清晰）"];
 
-    // 破冰話題庫（模擬 AI 生成）
     const topicDatabase = {
         news: "最近看新聞發現高通膨時代大家都在討論怎麼抗通膨，突然想到妳，最近工作還順利嗎？找時間一起喝杯咖啡，跟妳分享幾個實用的理財防禦小撇步呀！☕️",
-        weather: "哈囉！今天天氣突然變得很悶熱/下大雨，出門記得多喝水/帶把傘喔！最近剛好是新一季保單檢視的季節，出門在外注意安全的同時，也別忘了關心一下自己的保障喔～安全第一！平安是福❤️",
+        weather: "哈囉！今天天氣突然變得很悶熱，出門記得多喝水喔！最近剛好是新一季保單檢視的季節，出門在外注意安全的同時，也別忘了關心一下自己的保障喔～平安是福❤️",
         insurance: "姐！最近很多客戶都在問醫療險改革的事情，大家都卡在額度不夠用。我剛好幫妳的保障做了一張視覺對比圖，看這週四或週五哪天方便，我過去幫妳分析一下，讓妳買得安心不踩雷！📊",
-        cancer: "妳知道嗎？最近健保新藥的新聞炒得很熱，很多新型癌症癌症標靶藥物動輒上百萬，真的讓人很有感。其實提早規劃好防癌與重大傷病，就是對家人最負責任的愛。最近有空讓我幫妳看看目前的規劃有沒有漏洞嗎？❤️",
+        cancer: "妳知道嗎？最近健保新藥的新聞炒得很熱，很多新型癌症標靶藥物動輒上百萬，真的讓人很有感。其實提早規劃好防癌與重大傷病，就是對家人最負責任的愛。最近有空讓我幫妳看看目前的規劃有沒有漏洞嗎？❤️",
         finance: "最近美股和台股波動真的蠻大的，很多人都在聊資產配置。其實在這種市場下，有一筆穩定增值、不受市場影響的配置才是最安心的底氣。這幾天找時間聊聊，我幫妳看看怎麼鎖住資產吧！📈"
     };
 
-    // 刷新能量與金句
     function refreshEnergy() {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         const randomCompass = compasses[Math.floor(Math.random() * compasses.length)];
@@ -235,18 +275,13 @@
         document.getElementById('compass-text').innerText = randomCompass;
     }
 
-    // 切換標籤生成破冰文案
     function generateTopic(type, element) {
-        // 切換按鈕 active 樣式
         const buttons = document.querySelectorAll('.tag-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
         element.classList.add('active');
-
-        // 更換內容
         document.getElementById('output-text').innerText = topicDatabase[type];
     }
 
-    // 一鍵複製功能
     function copyText() {
         const text = document.getElementById('output-text').innerText;
         navigator.clipboard.writeText(text).then(() => {
